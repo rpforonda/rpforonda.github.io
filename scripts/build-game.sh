@@ -26,4 +26,9 @@ if command -v wasm-opt >/dev/null; then
 else
   cp "$out" play/block-coders.wasm
 fi
+# The game's own JS plugins (e.g. web/storage.js for browser saves) ship with it,
+# so the plugin always matches the Rust side that calls it.
+if [[ -d "$src/web" ]]; then
+  cp "$src"/web/*.js play/
+fi
 ls -lh play/block-coders.wasm

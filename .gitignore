@@ -10,3 +10,4 @@
 
 # private résumé details (phone, clearance)
 /resume/private.env
+/play/storage.js

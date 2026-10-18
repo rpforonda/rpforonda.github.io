@@ -59,8 +59,8 @@ pub fn FeaturedGame() -> impl IntoView {
                         .collect_view()}
                 </div>
                 <p class="game-note">
-                    "Best on a laptop or desktop. Click the game to give it keyboard focus. "
-                    "Progress isn't saved in the browser version yet."
+                    "Progress is saved only in this browser on this device. Nothing is sent anywhere. "
+                    "Best on a laptop, desktop or tablet; on a phone, use Open full screen in landscape."
                 </p>
             </div>
             <div class="game-details">
