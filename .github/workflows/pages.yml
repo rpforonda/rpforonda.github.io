@@ -40,8 +40,15 @@ jobs:
         with:
           version: latest
 
-      - name: Install wasm-opt
-        run: sudo apt-get update && sudo apt-get install -y binaryen
+      # Pin a modern wasm-opt for both the site (Trunk uses whatever is on PATH)
+      # and the game. Ubuntu's apt binaryen (v108) is too old and breaks
+      # wasm-bindgen's externref table ("WebAssembly.Table.grow(): failed to grow table").
+      - name: Install wasm-opt (binaryen version_123)
+        run: |
+          curl -sSL https://github.com/WebAssembly/binaryen/releases/download/version_123/binaryen-version_123-x86_64-linux.tar.gz \
+            | tar xz -C "$RUNNER_TEMP"
+          echo "$RUNNER_TEMP/binaryen-version_123/bin" >> "$GITHUB_PATH"
+          "$RUNNER_TEMP/binaryen-version_123/bin/wasm-opt" --version
 
       - name: Build Block Coders → play/
         run: scripts/build-game.sh .game-src
