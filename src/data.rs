@@ -251,41 +251,6 @@ pub const CERTS: &[Cert] = &[
     // CompTIA Security+ (2014) expired Sep 2026, so it's left off. Re-add it here if you renew.
 ];
 
-/// Steps shown in the interactive "anatomy of a flow" widget.
-pub struct FlowStep {
-    pub icon: &'static str,
-    pub title: &'static str,
-    pub detail: &'static str,
-}
-
-pub const FLOW_STEPS: &[FlowStep] = &[
-    FlowStep {
-        icon: "⚡",
-        title: "Trigger",
-        detail: "When a new invoice lands in the SharePoint library, the flow starts with trigger conditions so it only fires on PDFs.",
-    },
-    FlowStep {
-        icon: "🔎",
-        title: "Extract",
-        detail: "AI Builder pulls vendor, amount and due date from the document. Low-confidence fields get flagged for review.",
-    },
-    FlowStep {
-        icon: "✅",
-        title: "Approve",
-        detail: "Amount-based routing sends an adaptive card in Teams. No response in 24h? It escalates to the manager's manager.",
-    },
-    FlowStep {
-        icon: "🗄️",
-        title: "Record",
-        detail: "The decision is written to Dataverse with a full audit trail, then posted to the ERP via a custom connector.",
-    },
-    FlowStep {
-        icon: "🛟",
-        title: "Handle errors",
-        detail: "A Try/Catch scope pattern catches failures, logs run details and pings the support channel with a deep link to the run.",
-    },
-];
-
 pub struct Job {
     pub title: &'static str,
     pub org: &'static str,

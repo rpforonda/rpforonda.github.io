@@ -15,7 +15,6 @@ fn App() -> impl IntoView {
             <Projects/>
             <FeaturedGame/>
             <Experience/>
-            <FlowDemo/>
             <Certs/>
         </main>
         <Footer/>

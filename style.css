@@ -148,21 +148,6 @@ section { padding: 72px 0 24px; }
 .tag-sample { color: var(--muted); background: transparent; border: 1px dashed var(--border); }
 .tag-js { color: var(--js); background: color-mix(in srgb, var(--js) 15%, transparent); }
 
-/* ---------- Flow demo ---------- */
-.flow { display: flex; gap: 0.75rem; overflow-x: auto; padding-bottom: 0.5rem; margin-bottom: 1.25rem; }
-.flow-step {
-  flex: 1 0 130px; position: relative;
-  display: flex; flex-direction: column; align-items: center; gap: 0.4rem;
-  padding: 1rem; border-radius: 14px; cursor: pointer; font: inherit; font-weight: 600;
-  background: var(--card); color: var(--muted); border: 1px solid var(--border);
-  transition: all 0.2s;
-}
-.flow-step.done { color: var(--text); border-color: color-mix(in srgb, var(--accent-2) 60%, var(--border)); }
-.flow-step.active { color: var(--text); border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 30%, transparent); }
-.flow-icon { font-size: 1.6rem; }
-.flow-detail { animation: fade-in 0.25s ease; }
-.flow-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 1rem; }
-
 /* ---------- Certs ---------- */
 .cert { display: flex; flex-direction: column; gap: 0.25rem; color: var(--text); }
 .cert:hover { text-decoration: none; border-color: var(--accent); }
