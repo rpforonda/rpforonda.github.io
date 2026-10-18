@@ -2,16 +2,59 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>Block Coders</title>
     <style>
       html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #0b0d14; }
-      canvas { display: block; width: 100%; height: 100%; outline: none; }
+      canvas { display: block; width: 100%; height: 100%; outline: none; touch-action: none; }
+
+      /* Touch devices held upright: the 16:10 game would be tiny, so ask to rotate. */
+      #rotate {
+        position: fixed; inset: 0; z-index: 10; display: none;
+        flex-direction: column; align-items: center; justify-content: center; gap: 18px;
+        padding: max(24px, env(safe-area-inset-top)) 24px max(24px, env(safe-area-inset-bottom));
+        background: #0b0d14; color: #e7e9f2; text-align: center;
+        font: 600 18px/1.4 system-ui, -apple-system, "Segoe UI", sans-serif;
+      }
+      #rotate.show { display: flex; }
+      #rotate p { margin: 0; max-width: 22ch; }
+      #rotate .sub { font-weight: 400; font-size: 15px; color: #9097b0; }
+      .phone {
+        width: 46px; height: 76px; border: 4px solid #7c5cff; border-radius: 10px;
+        animation: turn 2.4s ease-in-out infinite;
+      }
+      @keyframes turn { 0%, 25% { transform: rotate(0); } 55%, 85% { transform: rotate(-90deg); } 100% { transform: rotate(0); } }
+      @media (prefers-reduced-motion: reduce) { .phone { animation: none; transform: rotate(-90deg); } }
+      .btn {
+        font: inherit; font-size: 16px; cursor: pointer; border-radius: 12px; padding: 12px 20px;
+        border: 2px solid #7c5cff; background: #7c5cff; color: #fff; min-height: 48px;
+      }
+      .btn.ghost { background: transparent; color: #c9c2ff; border-color: #393e57; }
+      .btn[hidden] { display: none; }
+
+      /* Landscape on a touch device, not yet full screen: small button in the black side bar. */
+      #fs-corner {
+        position: fixed; z-index: 5; display: none; top: max(8px, env(safe-area-inset-top));
+        left: max(8px, env(safe-area-inset-left));
+        width: 44px; height: 44px; padding: 0; border-radius: 10px; cursor: pointer;
+        border: 1px solid #393e57; background: rgb(22 26 42 / 0.9); color: #e7e9f2; font-size: 22px; line-height: 1;
+      }
+      #fs-corner.show { display: block; }
     </style>
   </head>
   <body>
     <!-- macroquad looks up this exact id -->
     <canvas id="glcanvas" tabindex="1"></canvas>
+
+    <div id="rotate" role="dialog" aria-modal="true" aria-labelledby="rotate-title">
+      <div class="phone" aria-hidden="true"></div>
+      <p id="rotate-title">Turn your device sideways to play</p>
+      <p class="sub">Block Coders is made for a wide screen.</p>
+      <button class="btn" id="fs-rotate" hidden>Play full screen</button>
+      <button class="btn ghost" id="anyway">Play anyway</button>
+    </div>
+    <button id="fs-corner" aria-label="Full screen" title="Full screen">⛶</button>
+
     <!-- Loaders vendored from the game's exact crate versions (see Cargo.lock):
          gl.js    = miniquad 0.4.11 js/gl.js
          audio.js = quad-snd 0.2.8 js/audio.js
@@ -24,6 +67,60 @@
     <script>
       load("block-coders.wasm");
       document.getElementById("glcanvas").focus();
+    </script>
+    <script>
+      "use strict";
+      // Phone/tablet helpers: a rotate prompt in portrait and a full-screen button.
+      // Presentation only: remembers "Play anyway" for this tab, sends nothing anywhere.
+      (function () {
+        const canvas = document.getElementById("glcanvas");
+        const rotate = document.getElementById("rotate");
+        const fsRotate = document.getElementById("fs-rotate");
+        const fsCorner = document.getElementById("fs-corner");
+        const touch = matchMedia("(pointer: coarse)");
+        const portrait = matchMedia("(orientation: portrait)");
+        const root = document.documentElement;
+        // iPhone Safari has no element full screen; iPad and Android do.
+        const canFullscreen = !!(document.fullscreenEnabled || document.webkitFullscreenEnabled);
+        const isFullscreen = () => !!(document.fullscreenElement || document.webkitFullscreenElement);
+        let dismissed = false;
+        try { dismissed = sessionStorage.getItem("bc-play-anyway") === "1"; } catch (e) { /* storage blocked */ }
+
+        async function goFullscreen() {
+          try {
+            if (root.requestFullscreen) await root.requestFullscreen({ navigationUI: "hide" });
+            else if (root.webkitRequestFullscreen) root.webkitRequestFullscreen();
+            // Android Chrome can lock orientation once in full screen; other browsers reject this.
+            if (screen.orientation && screen.orientation.lock) await screen.orientation.lock("landscape").catch(() => {});
+          } catch (e) { /* the user or browser declined */ }
+          canvas.focus();
+          update();
+        }
+
+        function update() {
+          const onTouch = touch.matches;
+          rotate.classList.toggle("show", onTouch && portrait.matches && !dismissed);
+          fsRotate.hidden = !canFullscreen;
+          // Only show the corner button where the letterboxed 16:10 game leaves a side bar for it.
+          const gameW = Math.min(innerWidth, innerHeight * 1.6);
+          const bar = (innerWidth - gameW) / 2;
+          fsCorner.classList.toggle("show", onTouch && !portrait.matches && canFullscreen && !isFullscreen() && bar >= 56);
+        }
+
+        fsRotate.addEventListener("click", goFullscreen);
+        fsCorner.addEventListener("click", goFullscreen);
+        document.getElementById("anyway").addEventListener("click", () => {
+          dismissed = true;
+          try { sessionStorage.setItem("bc-play-anyway", "1"); } catch (e) { /* storage blocked */ }
+          update();
+          canvas.focus();
+        });
+        for (const mq of [touch, portrait]) mq.addEventListener("change", update);
+        addEventListener("resize", update);
+        document.addEventListener("fullscreenchange", update);
+        document.addEventListener("webkitfullscreenchange", update);
+        update();
+      })();
     </script>
   </body>
 </html>

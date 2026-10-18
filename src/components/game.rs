@@ -1,6 +1,18 @@
 use crate::data::GAME;
 use leptos::prelude::*;
 
+/// Phones are too small for the inline 16:10 embed, so they get the full-page
+/// game (which shows its own rotate / full-screen prompt) instead.
+fn is_phone() -> bool {
+    window()
+        .match_media(
+            "(pointer: coarse) and (max-width: 760px), (pointer: coarse) and (max-height: 500px)",
+        )
+        .ok()
+        .flatten()
+        .is_some_and(|mq| mq.matches())
+}
+
 /// Featured Block Coders section. The game is a separate macroquad wasm build
 /// served from play/, so it's embedded in an iframe and only loaded on click.
 #[component]
@@ -23,7 +35,16 @@ pub fn FeaturedGame() -> impl IntoView {
                                     src=move || GAME.shots[shot.get()].0
                                     alt=move || GAME.shots[shot.get()].1
                                 />
-                                <button class="play-overlay" on:click=move |_| set_playing.set(true)>
+                                <button
+                                    class="play-overlay"
+                                    on:click=move |_| {
+                                        if is_phone() {
+                                            let _ = window().location().set_href(GAME.play_url);
+                                        } else {
+                                            set_playing.set(true);
+                                        }
+                                    }
+                                >
                                     <span class="play-icon">"▶"</span>
                                     "Play in your browser"
                                 </button>
