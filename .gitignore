@@ -1,0 +1,12 @@
+/target
+/dist
+
+# private LinkedIn export (contains profile analytics)
+*LinkedIn*.pdf
+
+# built by scripts/build-game.sh
+/.game-src
+/play/block-coders.wasm
+
+# private résumé details (phone, clearance)
+/resume/private.env

@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Block Coders</title>
+    <style>
+      html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #0b0d14; }
+      canvas { display: block; width: 100%; height: 100%; outline: none; }
+    </style>
+  </head>
+  <body>
+    <!-- macroquad looks up this exact id -->
+    <canvas id="glcanvas" tabindex="1"></canvas>
+    <!-- Loaders vendored from the game's exact crate versions (see Cargo.lock):
+         gl.js    = miniquad 0.4.11 js/gl.js
+         audio.js = quad-snd 0.2.8 js/audio.js
+         macroquad's all-in-one mq_js_bundle.js isn't used: its websocket plugin
+         throws under "use strict" and the game doesn't need it. -->
+    <script src="gl.js"></script>
+    <script src="audio.js"></script>
+    <script>
+      load("block-coders.wasm");
+      document.getElementById("glcanvas").focus();
+    </script>
+  </body>
+</html>

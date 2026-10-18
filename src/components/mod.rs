@@ -1,0 +1,21 @@
+mod about;
+mod certs;
+mod experience;
+mod flow_demo;
+mod footer;
+mod game;
+mod hero;
+mod nav;
+mod projects;
+mod skills;
+
+pub use about::About;
+pub use certs::Certs;
+pub use experience::Experience;
+pub use flow_demo::FlowDemo;
+pub use footer::Footer;
+pub use game::FeaturedGame;
+pub use hero::Hero;
+pub use nav::Nav;
+pub use projects::Projects;
+pub use skills::Skills;
