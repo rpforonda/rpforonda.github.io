@@ -2,7 +2,7 @@
 
 pub const NAME: &str = "Roel Foronda";
 pub const ROLE: &str = "Security-Focused Web & Power Platform Developer";
-pub const TAGLINE: &str = "12+ years in IT and cybersecurity, now building secure web apps, SharePoint solutions and automations with security designed in from day one.";
+pub const TAGLINE: &str = "16+ years in IT and cybersecurity, now building secure web apps, SharePoint solutions and automations with security designed in from day one.";
 pub const LOCATION: &str = "Baden-Württemberg, Germany";
 pub const EMAIL: &str = "rpforonda@gmail.com";
 pub const GITHUB: &str = "https://github.com/rpforonda";
@@ -11,7 +11,7 @@ pub const LINKEDIN: &str = "https://www.linkedin.com/in/rpforonda";
 pub const RESUME_URL: &str = "public/resume.pdf";
 
 pub const ABOUT: &[&str] = &[
-    "I'm an IT professional with more than 12 years of experience, \
+    "I'm an IT professional with more than 16 years of experience, \
      starting with a decade in the US Marine Corps running networks and cybersecurity programs, \
      then leading system accreditation and security management at Booz Allen Hamilton and Lockheed Martin.",
     "My passion for technology pulled me into software engineering. Today I build SharePoint \
@@ -28,7 +28,7 @@ pub struct Stat {
 
 pub const STATS: &[Stat] = &[
     Stat {
-        value: "12+ yrs",
+        value: "16+ yrs",
         label: "IT & cybersecurity",
     },
     Stat {
