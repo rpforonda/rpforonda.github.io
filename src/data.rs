@@ -3,12 +3,12 @@
 pub const NAME: &str = "Roel Foronda";
 pub const ROLE: &str = "Security-Focused Web & Power Platform Developer";
 pub const TAGLINE: &str = "16+ years in IT and cybersecurity, now building secure web apps, SharePoint solutions and automations with security designed in from day one.";
-pub const LOCATION: &str = "Baden-Württemberg, Germany";
+pub const LOCATION: &str = "Germany";
 pub const EMAIL: &str = "rpforonda@gmail.com";
 pub const GITHUB: &str = "https://github.com/rpforonda";
 pub const LINKEDIN: &str = "https://www.linkedin.com/in/rpforonda";
-// Relative so it works under a GitHub Pages project subpath (/<repo>/).
-pub const RESUME_URL: &str = "public/resume.pdf";
+/// The résumé isn't published; visitors request it by email instead.
+pub const RESUME_REQUEST_SUBJECT: &str = "Résumé request";
 
 pub const ABOUT: &[&str] = &[
     "I'm an IT professional with more than 16 years of experience, \
@@ -177,9 +177,9 @@ pub const PROJECTS: &[Project] = &[
     Project {
         // NOTE: private repo for a government program, so keep the description generic.
         id: 2,
-        title: "C5I Interoperability Map",
+        title: "Interoperability Capability Map",
         category: Category::SharePoint,
-        problem: "A Marine Corps command tracked partner C5I capability data in SharePoint lists with no way to see it geographically.",
+        problem: "A defense organization tracked partner capability data in SharePoint lists with no way to see it geographically.",
         solution: "Interactive Leaflet map in Next.js/TypeScript that plots SharePoint list data, opens detailed record views in modals, resolves editor names via the SharePoint REST API and prints formatted reports.",
         result: "Turned a flat list into a visual, printable briefing tool that improved operational efficiency and data accessibility.",
         stack: &["Next.js", "TypeScript", "React Leaflet", "SharePoint REST", "Tailwind"],
@@ -190,9 +190,9 @@ pub const PROJECTS: &[Project] = &[
         id: 7,
         title: "SharePoint Portal Modernization",
         category: Category::SharePoint,
-        problem: "A Marine Forces Europe/Africa SharePoint portal ran on aging jQuery code and dated styling.",
+        problem: "A defense organization's SharePoint portal ran on aging jQuery code and dated styling.",
         solution: "Migrated the front-end from jQuery to modern JavaScript and Svelte components, and rebuilt the portal's CSS for a contemporary, responsive design.",
-        result: "A more secure, faster and more user-friendly portal for command users.",
+        result: "A more secure, faster and more user-friendly portal for its users.",
         stack: &["Svelte", "JavaScript", "SharePoint", "CSS"],
         links: &[],
         sample: false,
@@ -264,11 +264,11 @@ pub const EXPERIENCE: &[Job] = &[
         title: "SharePoint Developer · IM/KM Specialist",
         org: "C4 Planning Solutions",
         dates: "Jul 2022 – Present",
-        location: "Baden-Württemberg, Germany",
+        location: "Germany",
         bullets: &[
-            "Develop and maintain SharePoint sites and applications for Marine Forces Europe/Africa.",
+            "Develop and maintain SharePoint sites and applications for a US Department of Defense customer.",
             "Migrated the portal from jQuery to modern JavaScript and Svelte to improve security and performance, and modernized its CSS.",
-            "Built an interactive C5I application in Next.js, improving operational efficiency and data accessibility.",
+            "Built an interactive mapping application in Next.js, improving operational efficiency and data accessibility.",
             "Gather requirements with cross-functional teams and deliver custom SharePoint solutions and automations.",
         ],
     },
@@ -289,9 +289,9 @@ pub const EXPERIENCE: &[Job] = &[
         dates: "Nov 2020 – Jan 2022",
         location: "Palmdale, CA",
         bullets: &[
-            "Assessed the security posture of Special Access Programs through configuration audits and vulnerability assessments.",
-            "Applied JSIG and RMF to define technical IA requirements and authored authorization documentation.",
-            "Ran incident response, data-spill investigations and POA&M tracking.",
+            "Assessed the security posture of classified programs through configuration audits and vulnerability assessments.",
+            "Applied the NIST Risk Management Framework to define technical security requirements and authored authorization documentation.",
+            "Ran incident response investigations and POA&M tracking.",
         ],
     },
     Job {
@@ -309,10 +309,10 @@ pub const EXPERIENCE: &[Job] = &[
         title: "Cybersecurity Manager · Cybersecurity Technician · Data Network Specialist",
         org: "US Marine Corps",
         dates: "Jul 2009 – Aug 2019",
-        location: "Korea · Pacific · Deployed",
+        location: "Asia-Pacific · Deployed",
         bullets: &[
-            "Led the cybersecurity section of Marine Corps Forces Korea, including user training and leadership awareness.",
-            "Implemented and monitored security measures for Marine Corps Forces Pacific networks.",
+            "Led a command cybersecurity section, including user training and leadership awareness.",
+            "Implemented and monitored security measures for regional command networks.",
             "Installed and managed networks and security devices in austere tactical environments; supported 300+ users.",
         ],
     },
@@ -344,10 +344,10 @@ pub const GAME: Game = Game {
     ],
     stack: &["Rust", "macroquad", "WebAssembly", "Custom VM"],
     shots: &[
-        ("public/block-coders/if-else-level.png", "A dynamic If/Else level in the Decision Desert"),
-        ("public/block-coders/functions.png", "Writing a function"),
-        ("public/block-coders/rust-code.png", "Show Rust code view"),
-        ("public/block-coders/levels.png", "Level select"),
-        ("public/block-coders/players.png", "Up to 6 players with saved progress"),
+        ("public/block-coders/if-else-level.webp", "A dynamic If/Else level in the Decision Desert"),
+        ("public/block-coders/functions.webp", "Writing a function"),
+        ("public/block-coders/rust-code.webp", "Show Rust code view"),
+        ("public/block-coders/levels.webp", "Level select"),
+        ("public/block-coders/players.webp", "Up to 6 players with saved progress"),
     ],
 };
