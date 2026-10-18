@@ -8,8 +8,11 @@
 /.game-src
 /play/block-coders.wasm
 
-# private résumé details (phone, clearance)
-/resume/private.env
+# The résumé is sent on request, not published. Its source lives outside this
+# repo (~/Work/resume/); never commit résumé files or private details here.
+/resume/
+*resume*.pdf
+*Resume*.pdf
 /play/storage.js
 
 # local Claude Code worktrees

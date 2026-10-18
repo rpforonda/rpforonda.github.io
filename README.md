@@ -20,7 +20,8 @@ trunk build --release  # static output in dist/
 | Name, links, stats, skills, projects, certs, flow steps | `src/data.rs` |
 | Colors / theme / layout | `style.css` (CSS variables at the top) |
 | Page title, SEO, Open Graph tags | `index.html` |
-| Résumé, images, favicon | drop into `public/` (served at `public/...`) |
+| Images, favicon | drop into `public/` (served at `public/...`). Use WebP (lossless for screenshots and pixel art). |
+| Résumé | not published: the hero's **Request résumé** button opens a pre-filled email. Source and PDFs live outside this repo in `~/Work/resume/` (`build.sh`). |
 | Section order | `App` in `src/main.rs` |
 
 Each section is its own component in `src/components/`.
