@@ -19,7 +19,11 @@ fi
 RUSTFLAGS="-C link-arg=--allow-undefined" \
   cargo build --release --target wasm32-unknown-unknown --manifest-path "$src/Cargo.toml"
 
-out="$src/target/wasm32-unknown-unknown/release/block-coders.wasm"
+# Ask cargo where it built: CARGO_TARGET_DIR or a build.target-dir setting moves
+# the output, and a hardcoded $src/target would silently ship an older build.
+target_dir="$(cargo metadata --format-version 1 --no-deps --manifest-path "$src/Cargo.toml" \
+  | python3 -c 'import json, sys; print(json.load(sys.stdin)["target_directory"])')"
+out="$target_dir/wasm32-unknown-unknown/release/block-coders.wasm"
 if command -v wasm-opt >/dev/null; then
   wasm-opt -Oz --enable-bulk-memory --enable-nontrapping-float-to-int --enable-sign-ext \
     --enable-mutable-globals "$out" -o play/block-coders.wasm
