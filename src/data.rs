@@ -33,7 +33,7 @@ pub const STATS: &[Stat] = &[
     },
     Stat {
         value: "CISSP",
-        label: "since 2016",
+        label: "Credential ID 587266",
     },
     Stat {
         value: "10 yrs",
