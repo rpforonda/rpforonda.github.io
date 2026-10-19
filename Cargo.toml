@@ -6,8 +6,9 @@ edition = "2021"
 [dependencies]
 leptos = { version = "0.8.22", features = ["csr"] }
 console_error_panic_hook = "0.1"
-# Same version Leptos already pulls in; only adds the media-query API.
-web-sys = { version = "0.3.106", features = ["MediaQueryList", "Location"] }
+# Same version Leptos already pulls in; only adds the media-query, location and
+# scroll-into-view APIs.
+web-sys = { version = "0.3.106", features = ["MediaQueryList", "Location", "ScrollIntoViewOptions", "ScrollBehavior"] }
 
 [profile.release]
 opt-level = "z"

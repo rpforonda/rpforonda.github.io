@@ -38,6 +38,12 @@ scripts/build-game.sh ../block-coders   # or build from an existing checkout
 trunk serve                      # the game is at /play/index.html
 ```
 
+`build-game.sh` asks `cargo metadata` where the build went, so it also works with `CARGO_TARGET_DIR` or a
+`build.target-dir` setting (a hardcoded `target/` path would quietly ship an older build).
+
+Keyboard users can Tab into the game and back out again. miniquad's `gl.js` cancels Tab on the canvas, which would
+trap focus inside the iframe; the game never uses Tab, so `play/index.html` stops Tab before it reaches the canvas.
+
 `play/gl.js` and `play/audio.js` are the JS loaders from the game's exact crate versions (miniquad 0.4.11, quad-snd 0.2.8).
 If the game's `Cargo.lock` bumps those, copy the new files from `~/.cargo/registry/src/*/<crate>/js/`.
 macroquad's all-in-one `mq_js_bundle.js` isn't used: its websocket plugin throws under `"use strict"`.
@@ -52,6 +58,9 @@ macroquad's all-in-one `mq_js_bundle.js` isn't used: its websocket plugin throws
 4. Optional: add a custom domain in **Settings → Pages** and put the domain in `public/CNAME`.
 
 All in-site links are relative (`public/...`, `play/...`), so the same build works at the root or under `/<repo>/`.
+
+Direct links to a section (e.g. `/#game`) work: the sections only exist once the app has mounted, after the browser
+has given up looking for the anchor, so `scroll_to_hash` in `src/main.rs` jumps there itself.
 
 ## Upgrading to Leptos 0.9
 

@@ -65,6 +65,14 @@
     <!-- Browser saves (localStorage). Copied from the game repo's web/ by scripts/build-game.sh. -->
     <script src="storage.js"></script>
     <script>
+      "use strict";
+      // Keyboard users must be able to leave the game (WCAG 2.1.2, no keyboard
+      // trap). miniquad's gl.js cancels Tab on the canvas "for UI", but the game
+      // never uses Tab, so stop Tab before it reaches the canvas and let the
+      // browser move focus as usual (out of the iframe, back to the page).
+      window.addEventListener("keydown", (e) => {
+        if (e.key === "Tab") e.stopPropagation();
+      }, true);
       load("block-coders.wasm");
       document.getElementById("glcanvas").focus();
     </script>
