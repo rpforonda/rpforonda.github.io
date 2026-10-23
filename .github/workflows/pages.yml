@@ -37,9 +37,15 @@ jobs:
             .
             .game-src
 
-      - uses: jetli/trunk-action@v0.5.0
-        with:
-          version: latest
+      # Installed straight into ~/.cargo/bin: jetli/trunk-action@v0.5.0 started failing
+      # on 2026-10-23 ("EXDEV: cross-device link not permitted") because it moves the
+      # binary from /tmp, which the runner now mounts separately. Pinned, so builds
+      # don't change under us.
+      - name: Install Trunk (v0.22.0)
+        run: |
+          curl -sSfL https://github.com/trunk-rs/trunk/releases/download/v0.22.0/trunk-x86_64-unknown-linux-gnu.tar.gz \
+            | tar xz -C "$HOME/.cargo/bin" trunk
+          trunk --version
 
       # Pin a modern wasm-opt for both the site (Trunk uses whatever is on PATH)
       # and the game. Ubuntu's apt binaryen (v108) is too old and breaks
