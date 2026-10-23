@@ -8,7 +8,7 @@ pub fn Hero() -> impl IntoView {
     view! {
         <section id="top" class="hero">
             <p class="eyebrow">{LOCATION} " · Open to work"</p>
-            <h1 class="gradient-last">{ROLE}</h1>
+            <h1>{ROLE}</h1>
             <p class="lead">{TAGLINE}</p>
             <div class="cta-row">
                 <a class="btn primary" href="#work">"See my work"</a>
