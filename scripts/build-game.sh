@@ -35,4 +35,9 @@ fi
 if [[ -d "$src/web" ]]; then
   cp "$src"/web/*.js play/
 fi
+# Fonts built into the game ship with their license (SIL OFL), next to the game.
+if compgen -G "$src/assets/fonts/OFL-*.txt" >/dev/null; then
+  mkdir -p play/licenses
+  cp "$src"/assets/fonts/OFL-*.txt play/licenses/
+fi
 ls -lh play/block-coders.wasm

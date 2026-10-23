@@ -2,7 +2,7 @@ use crate::data::GAME;
 use leptos::prelude::*;
 
 /// Phones are too small for the inline 16:10 embed, so they get the full-page
-/// game (which shows its own rotate / full-screen prompt) instead.
+/// game instead, which lays itself out for the phone (upright or sideways).
 fn is_phone() -> bool {
     window()
         .match_media(
@@ -81,7 +81,7 @@ pub fn FeaturedGame() -> impl IntoView {
                 </div>
                 <p class="game-note">
                     "Progress is saved only in this browser on this device. Nothing is sent anywhere. "
-                    "Best on a laptop, desktop or tablet; on a phone, use Open full screen in landscape."
+                    "Plays on laptops, tablets and phones, held either way."
                 </p>
             </div>
             <div class="game-details">
