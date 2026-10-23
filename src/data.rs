@@ -332,22 +332,24 @@ pub struct Game {
 
 pub const GAME: Game = Game {
     title: "Block Coders",
-    pitch: "A blocky, Minecraft-style coding game, written in Rust, that teaches kids aged 8–12 to think like programmers. They snap code blocks together to guide a miner through 60 levels across six worlds: sequences, loops, functions, if/else, while loops and algorithms.",
+    pitch: "A blocky, Minecraft-style coding game, written in Rust, that teaches kids aged 8–12 to think like programmers. They snap code blocks together to guide a miner through 66 levels across seven worlds: sequences, loops, functions, if/else, while loops and algorithms, and variables.",
     repo: "https://github.com/rpforonda/block-coders",
     play_url: "play/index.html",
     features: &[
-        "32 dynamic levels that reshuffle on every run, so memorized paths fail and real logic wins",
+        "34 dynamic levels that reshuffle on every run, so memorized paths fail and real logic wins",
         "Anti-luck checks: winning programs are quietly re-tested against 80 variants of the level",
-        "Step-through debugger that highlights the running block and explains errors in kid-friendly words",
+        "Step-through debugger that highlights the running block, and smart hints that read the kid's own program",
         "\"Show Rust code\" turns block programs into real, syntax-highlighted Rust",
-        "A tiny compiler and VM, procedurally generated pixel art and sound, and no asset files",
+        "Built for kids new to computers: a guided tour, readable text (WCAG AA contrast, the Atkinson Hyperlegible font) and layouts for phones held either way",
+        "A tiny compiler and VM, and procedurally generated pixel art and sound",
     ],
     stack: &["Rust", "macroquad", "WebAssembly", "Custom VM"],
     shots: &[
-        ("public/block-coders/if-else-level.webp", "A dynamic If/Else level in the Decision Desert"),
-        ("public/block-coders/functions.webp", "Writing a function"),
-        ("public/block-coders/rust-code.webp", "Show Rust code view"),
-        ("public/block-coders/levels.webp", "Level select"),
-        ("public/block-coders/players.webp", "Up to 6 players with saved progress"),
+        ("public/block-coders/if-else-level.webp", "A dynamic If/Else level in the Decision Desert, running"),
+        ("public/block-coders/rust-code.webp", "Show Rust code: a function with while loops"),
+        ("public/block-coders/functions.webp", "A function running in its own tab"),
+        ("public/block-coders/variables.webp", "Counting Caverns: the count variable shown as a box while the program runs"),
+        ("public/block-coders/tour.webp", "The guided tour on level 1"),
+        ("public/block-coders/levels.webp", "Level select: seven worlds"),
     ],
 };

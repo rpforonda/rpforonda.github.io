@@ -41,6 +41,14 @@ trunk serve                      # the game is at /play/index.html
 `build-game.sh` asks `cargo metadata` where the build went, so it also works with `CARGO_TARGET_DIR` or a
 `build.target-dir` setting (a hardcoded `target/` path would quietly ship an older build).
 
+On phones, **Play** opens the game's own page (`play/index.html`), which fills the screen. The game lays itself out for
+phones held upright or sideways. Where the browser can go full screen (Android, iPad; not iPhone Safari), a small start
+card offers **Play full screen** once per tab; after that nothing covers the game, since its own buttons sit in every
+corner.
+
+The game's fonts (Atkinson Hyperlegible and its Mono) are built into the wasm. `build-game.sh` copies their SIL Open
+Font License texts to `play/licenses/`, so the license ships with the game.
+
 Keyboard users can Tab into the game and back out again. miniquad's `gl.js` cancels Tab on the canvas, which would
 trap focus inside the iframe; the game never uses Tab, so `play/index.html` stops Tab before it reaches the canvas.
 

@@ -14,6 +14,7 @@
 *resume*.pdf
 *Resume*.pdf
 /play/storage.js
+/play/licenses/
 
 # local Claude Code worktrees
 /.claude/
