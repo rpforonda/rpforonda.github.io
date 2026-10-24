@@ -337,8 +337,11 @@ h1, h2, h3, .mono, .brand, .eyebrow, .stats strong, .nav nav a, .btn, .filters b
    80px is html's scroll-padding-top, which view() treats as the screen's top.
    Arriving and leaving are one animation, so Chrome can composite it: two on
    the same properties would both run on the main thread and lag the scroll.
-   None of it applies for visitors who ask for reduced motion. */
-@supports (animation-timeline: view()) {
+   None of it applies for visitors who ask for reduced motion.
+   Off on iPhone and iPad for now (only iOS WebKit has -webkit-touch-callout):
+   visitors there reported the browser crashing on load, which no WebKit we
+   can run here reproduces. They get the plain page, without the fallback. */
+@supports (animation-timeline: view()) and (not (-webkit-touch-callout: none)) {
   @media (prefers-reduced-motion: no-preference) {
     main > section {
       min-height: calc(100vh - 80px);
