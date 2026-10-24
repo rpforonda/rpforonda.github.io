@@ -3,9 +3,12 @@
 # Usage: scripts/build-game.sh [path-to-block-coders-checkout]
 # Without an argument, it clones/updates the repo into .game-src/.
 set -euo pipefail
+# A checkout path is relative to where the script was run, so resolve it before
+# moving to the repo root.
+given="${1:+$(realpath -m "$1")}"
 cd "$(dirname "$0")/.."
 
-src="${1:-.game-src}"
+src="${given:-.game-src}"
 if [[ -z "${1:-}" ]]; then
   if [[ -d "$src/.git" ]]; then
     git -C "$src" pull --ff-only --quiet
