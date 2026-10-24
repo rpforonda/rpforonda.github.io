@@ -1,6 +1,5 @@
-use crate::data::{
-    EMAIL, GITHUB, LINKEDIN, LOCATION, RESUME_REQUEST_SUBJECT, ROLE, STATS, TAGLINE,
-};
+use crate::data::{GITHUB, LINKEDIN, LOCATION, RESUME_REQUEST_SUBJECT, ROLE, STATS, TAGLINE};
+use crate::mail;
 use leptos::prelude::*;
 
 #[component]
@@ -12,10 +11,14 @@ pub fn Hero() -> impl IntoView {
             <p class="lead">{TAGLINE}</p>
             <div class="cta-row">
                 <a class="btn primary" href="#work">"See my work"</a>
-                <a class="btn" href=format!("mailto:{EMAIL}")>"Email me"</a>
+                <a class="btn" href="#" on:click=|ev| { ev.prevent_default(); mail::compose("") }>"Email me"</a>
                 <a
                     class="btn"
-                    href=resume_request_link()
+                    href="#"
+                    on:click=|ev| {
+                        ev.prevent_default();
+                        mail::compose(&resume_request_query())
+                    }
                     title="My résumé is shared on request, so it isn't published here"
                 >
                     "Request résumé"
@@ -40,13 +43,13 @@ pub fn Hero() -> impl IntoView {
     }
 }
 
-/// `mailto:` link with a pre-filled subject and body. The résumé is sent on
-/// request rather than published, to limit what's scraped from the site.
-fn resume_request_link() -> String {
+/// Pre-filled subject and body for a résumé request email. The résumé is sent
+/// on request rather than published, to limit what's scraped from the site.
+fn resume_request_query() -> String {
     let body =
         "Hi Roel,\n\nI'd like to request your résumé.\n\nName:\nCompany:\nRole I'm hiring for:\n";
     format!(
-        "mailto:{EMAIL}?subject={}&body={}",
+        "?subject={}&body={}",
         encode(RESUME_REQUEST_SUBJECT),
         encode(body)
     )
