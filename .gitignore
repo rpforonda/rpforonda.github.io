@@ -8,8 +8,8 @@
 /.game-src
 /play/block-coders.wasm
 
-# The résumé is sent on request, not published. Its source lives outside this
-# repo (~/Work/resume/); never commit résumé files or private details here.
+# The resume is sent on request, not published. Its source lives outside this
+# repo (~/Work/resume/); never commit resume files or private details here.
 /resume/
 *resume*.pdf
 *Resume*.pdf

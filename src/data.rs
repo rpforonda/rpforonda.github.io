@@ -11,8 +11,8 @@ pub const EMAIL_USER: &str = "rpforonda.contact";
 pub const EMAIL_DOMAIN: &str = "gmail.com";
 pub const GITHUB: &str = "https://github.com/rpforonda";
 pub const LINKEDIN: &str = "https://www.linkedin.com/in/rpforonda";
-/// The résumé isn't published; visitors request it by email instead.
-pub const RESUME_REQUEST_SUBJECT: &str = "Résumé request";
+/// The resume isn't published; visitors request it by email instead.
+pub const RESUME_REQUEST_SUBJECT: &str = "Resume request";
 
 pub const ABOUT: &[&str] = &[
     "I'm an IT professional with more than 16 years of experience, \
