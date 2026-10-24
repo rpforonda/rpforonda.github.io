@@ -21,6 +21,8 @@ pub const ABOUT: &[&str] = &[
     "My passion for technology pulled me into software engineering. Today I build SharePoint \
      applications, Svelte and Next.js front-ends, and Power Platform solutions, and I bring a \
      security background to every project: security belongs at the start of the development life cycle, not bolted on at the end.",
+    "I built this site and Block Coders with AI coding agents, in Rust, a language I'm still learning. \
+     My part: deciding what to build, reviewing each change for correctness and security, and testing it.",
     "I like breaking down the silos between cybersecurity and engineering teams so they \
      collaborate instead of hand off.",
 ];
@@ -96,7 +98,8 @@ pub const SKILLS: &[SkillGroup] = &[
             "GitHub Actions CI/CD",
             "GitHub Pages / static hosting",
             "Vite",
-            "Rust + WASM (this site!)",
+            "AI coding agents",
+            "Rust (learning)",
         ],
     },
     SkillGroup {
