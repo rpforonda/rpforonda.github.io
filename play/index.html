@@ -43,6 +43,21 @@
          throws under "use strict" and the game doesn't need it. -->
     <script src="gl.js"></script>
     <script src="audio.js"></script>
+    <script>
+      "use strict";
+      // Sound on iPad and iPhone Safari. audio.js unlocks audio once, on the first
+      // touchstart, then removes its listeners. Safari doesn't count touchstart as a
+      // gesture that may start audio (only touchend, mousedown, keydown), so the game
+      // stayed silent. Retry on every real gesture until the game's AudioContext is
+      // running; this also restarts it after iOS pauses it for a call or app switch.
+      ["touchend", "mousedown", "keydown"].forEach((type) => {
+        document.addEventListener(type, () => {
+          if (typeof audio_context !== "undefined" && audio_context && audio_context.state !== "running") {
+            audio_context.resume();
+          }
+        }, true);
+      });
+    </script>
     <!-- Browser saves (localStorage). Copied from the game repo's web/ by scripts/build-game.sh. -->
     <script src="storage.js"></script>
     <script>
