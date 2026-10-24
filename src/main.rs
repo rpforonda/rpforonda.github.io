@@ -1,5 +1,6 @@
 mod components;
 mod data;
+mod mail;
 
 use components::*;
 use leptos::prelude::*;

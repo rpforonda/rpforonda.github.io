@@ -4,7 +4,11 @@ pub const NAME: &str = "Roel Foronda";
 pub const ROLE: &str = "Security-Focused Web & Power Platform Developer";
 pub const TAGLINE: &str = "16+ years in IT and cybersecurity, now building secure web apps, SharePoint solutions and automations with security designed in from day one.";
 pub const LOCATION: &str = "Germany";
-pub const EMAIL: &str = "rpforonda@gmail.com";
+/// The contact address, split so the whole thing never appears in this public
+/// repo or the built .wasm, where spam bots look for `name@domain`. `mail.rs`
+/// joins the halves into a link only when a visitor points at or focuses it.
+pub const EMAIL_USER: &str = "rpforonda.contact";
+pub const EMAIL_DOMAIN: &str = "gmail.com";
 pub const GITHUB: &str = "https://github.com/rpforonda";
 pub const LINKEDIN: &str = "https://www.linkedin.com/in/rpforonda";
 /// The résumé isn't published; visitors request it by email instead.
