@@ -11,8 +11,8 @@ pub const EMAIL_USER: &str = "rpforonda.contact";
 pub const EMAIL_DOMAIN: &str = "gmail.com";
 pub const GITHUB: &str = "https://github.com/rpforonda";
 pub const LINKEDIN: &str = "https://www.linkedin.com/in/rpforonda";
-/// The résumé isn't published; visitors request it by email instead.
-pub const RESUME_REQUEST_SUBJECT: &str = "Résumé request";
+/// The resume isn't published; visitors request it by email instead.
+pub const RESUME_REQUEST_SUBJECT: &str = "Resume request";
 
 pub const ABOUT: &[&str] = &[
     "I'm an IT professional with more than 16 years of experience, \
@@ -21,6 +21,8 @@ pub const ABOUT: &[&str] = &[
     "My passion for technology pulled me into software engineering. Today I build SharePoint \
      applications, Svelte and Next.js front-ends, and Power Platform solutions, and I bring a \
      security background to every project: security belongs at the start of the development life cycle, not bolted on at the end.",
+    "I built this site and Block Coders with AI coding agents, in Rust, a language I'm still learning. \
+     My part: deciding what to build, reviewing each change for correctness and security, and testing it.",
     "I like breaking down the silos between cybersecurity and engineering teams so they \
      collaborate instead of hand off.",
 ];
@@ -96,7 +98,8 @@ pub const SKILLS: &[SkillGroup] = &[
             "GitHub Actions CI/CD",
             "GitHub Pages / static hosting",
             "Vite",
-            "Rust + WASM (this site!)",
+            "AI coding agents",
+            "Rust (learning)",
         ],
     },
     SkillGroup {

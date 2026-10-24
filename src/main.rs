@@ -30,6 +30,11 @@ fn App() -> impl IntoView {
 
 fn main() {
     console_error_panic_hook::set_once();
+    // The deploy bakes a rendered copy of the page into index.html for search
+    // engines and link previews (scripts/prerender.sh). Swap it for the live app.
+    if let Some(copy) = document().get_element_by_id("prerendered") {
+        copy.remove();
+    }
     mount_to_body(App);
     scroll_to_hash();
     follow_section_links();

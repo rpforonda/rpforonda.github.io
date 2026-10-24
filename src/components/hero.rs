@@ -14,11 +14,11 @@ pub fn Hero() -> impl IntoView {
                 <MailLink class="btn">"Email me"</MailLink>
                 <MailLink
                     class="btn"
-                    title="My résumé is shared on request, so it isn't published here"
+                    title="My resume is shared on request, so it isn't published here"
                     subject=RESUME_REQUEST_SUBJECT
                     body=RESUME_REQUEST_BODY
                 >
-                    "Request résumé"
+                    "Request resume"
                 </MailLink>
                 <a class="btn ghost" href=GITHUB target="_blank" rel="noopener">"GitHub"</a>
                 <a class="btn ghost" href=LINKEDIN target="_blank" rel="noopener">"LinkedIn"</a>
@@ -40,7 +40,7 @@ pub fn Hero() -> impl IntoView {
     }
 }
 
-/// Pre-filled body for a résumé request email. The résumé is sent on request
+/// Pre-filled body for a resume request email. The resume is sent on request
 /// rather than published, to limit what's scraped from the site.
 const RESUME_REQUEST_BODY: &str =
-    "Hi Roel,\n\nI'd like to request your résumé.\n\nName:\nCompany:\nRole I'm hiring for:\n";
+    "Hi Roel,\n\nI'd like to request your resume.\n\nName:\nCompany:\nRole I'm hiring for:\n";

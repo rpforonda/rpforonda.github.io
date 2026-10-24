@@ -19,9 +19,9 @@ trunk build --release  # static output in dist/
 |---|---|
 | Name, links, stats, skills, projects, certs, flow steps | `src/data.rs` |
 | Colors / theme / layout | `style.css` (CSS variables at the top) |
-| Page title, SEO, Open Graph tags | `index.html` |
+| Page title, SEO, Open Graph tags | `index.html` (link-preview image: `public/og-card.png`, 1200×630) |
 | Images, favicon | drop into `public/` (served at `public/...`). Use WebP (lossless for screenshots and pixel art). |
-| Résumé | not published: the hero's **Request résumé** button opens a pre-filled email. Source and PDFs live outside this repo in `~/Work/resume/` (`build.sh`). |
+| Resume | not published: the hero's **Request resume** button opens a pre-filled email. Source and PDFs live outside this repo in `~/Work/resume/` (`build.sh`). |
 | Section order | `App` in `src/main.rs` |
 
 Each section is its own component in `src/components/`.
@@ -63,12 +63,16 @@ macroquad's all-in-one `mq_js_bundle.js` isn't used: its websocket plugin throws
    - or any other name (e.g. `portfolio`) to serve at `https://rpforonda.github.io/portfolio/`.
 2. In the repo: **Settings → Pages → Build and deployment → Source: GitHub Actions**.
 3. Push to `main`. `.github/workflows/pages.yml` builds the game and the site, sets the right base path, and deploys.
+   After the build, `scripts/prerender.sh` loads the page once in headless Chrome and bakes the rendered HTML into
+   `index.html`. Search engines and link previews, which don't run the app, see the content, and visitors see text
+   before the app loads. The app swaps the copy for itself when it mounts. If Chrome is missing or the page doesn't
+   render, the script warns and the deploy goes ahead without it.
 4. Optional: add a custom domain in **Settings → Pages** and put the domain in `public/CNAME`.
 
 All in-site links are relative (`public/...`, `play/...`), so the same build works at the root or under `/<repo>/`.
 
-Direct links to a section (e.g. `/#game`) work: the sections only exist once the app has mounted, after the browser
-has given up looking for the anchor, so `scroll_to_hash` in `src/main.rs` jumps there itself.
+Direct links to a section (e.g. `/#game`) work. The browser jumps to the baked-in copy. Once the app mounts and replaces
+it, `scroll_to_hash` in `src/main.rs` jumps there again, which also covers builds where the prerender was skipped.
 
 ## Upgrading to Leptos 0.9
 

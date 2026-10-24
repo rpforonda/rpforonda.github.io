@@ -73,6 +73,7 @@ jobs:
           repo="${{ github.event.repository.name }}"
           if [[ "$repo" == "${{ github.repository_owner }}.github.io" ]]; then base="/"; else base="/$repo/"; fi
           trunk build --release --public-url "$base"
+          scripts/prerender.sh dist "$base"
           touch dist/.nojekyll
 
       - uses: actions/upload-pages-artifact@v3
