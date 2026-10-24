@@ -322,6 +322,31 @@ h1, h2, h3, .mono, .brand, .eyebrow, .stats strong, .nav nav a, .btn, .filters b
 
 @keyframes fade-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
 
+/* ---------- Scroll fades ----------
+   Each section fades in as it scrolls into view and out as it leaves, tied to
+   the scroll position, with no script. Browsers with view timelines (Chrome and
+   Edge 115+, Safari 26+) run it off the main thread. */
+@supports (animation-timeline: view()) {
+  main > section {
+    animation: section-in linear both, section-out linear both;
+    animation-timeline: view(), view();
+    animation-range: entry 0% entry 40%, exit 60% exit 100%;
+  }
+}
+@keyframes section-in { from { opacity: 0; } }
+@keyframes section-out { to { opacity: 0; } }
+
+/* Everywhere else (Firefox 158): content dissolves into the page colour at the
+   bottom edge as it scrolls up, still with no script. Sticky inside main, so it
+   comes to rest in its own space above the footer and never covers content. */
+@supports not (animation-timeline: view()) {
+  main::after {
+    content: ""; display: block; position: sticky; bottom: 0; height: 15vh;
+    background: linear-gradient(transparent, var(--bg));
+    pointer-events: none;
+  }
+}
+
 /* ---------- Mobile ---------- */
 @media (max-width: 760px) {
   .menu-btn { display: inline-block; }
