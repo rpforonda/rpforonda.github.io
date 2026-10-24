@@ -11,9 +11,11 @@ on:
 permissions:
   contents: read
 
+# Never cancel a run that may already be publishing: a deploy cut off halfway
+# can leave Pages stuck until the workflow is re-run. Newer pushes wait instead.
 concurrency:
   group: pages
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   build:
@@ -40,11 +42,13 @@ jobs:
       # Installed straight into ~/.cargo/bin: jetli/trunk-action@v0.5.0 started failing
       # on 2026-10-23 ("EXDEV: cross-device link not permitted") because it moves the
       # binary from /tmp, which the runner now mounts separately. Pinned, so builds
-      # don't change under us.
+      # don't change under us. The sha256 is the one published with the release.
       - name: Install Trunk (v0.22.0)
         run: |
-          curl -sSfL https://github.com/trunk-rs/trunk/releases/download/v0.22.0/trunk-x86_64-unknown-linux-gnu.tar.gz \
-            | tar xz -C "$HOME/.cargo/bin" trunk
+          curl -sSfL -o "$RUNNER_TEMP/trunk.tar.gz" \
+            https://github.com/trunk-rs/trunk/releases/download/v0.22.0/trunk-x86_64-unknown-linux-gnu.tar.gz
+          echo "f78c1989240c56592d8cfc4df5cc27399a3ff66a3f9cc819e16f1e3d809ce7c2  $RUNNER_TEMP/trunk.tar.gz" | sha256sum -c -
+          tar xzf "$RUNNER_TEMP/trunk.tar.gz" -C "$HOME/.cargo/bin" trunk
           trunk --version
 
       # Pin a modern wasm-opt for both the site (Trunk uses whatever is on PATH)
@@ -52,8 +56,10 @@ jobs:
       # wasm-bindgen's externref table ("WebAssembly.Table.grow(): failed to grow table").
       - name: Install wasm-opt (binaryen version_123)
         run: |
-          curl -sSL https://github.com/WebAssembly/binaryen/releases/download/version_123/binaryen-version_123-x86_64-linux.tar.gz \
-            | tar xz -C "$RUNNER_TEMP"
+          curl -sSfL -o "$RUNNER_TEMP/binaryen.tar.gz" \
+            https://github.com/WebAssembly/binaryen/releases/download/version_123/binaryen-version_123-x86_64-linux.tar.gz
+          echo "e959f2170af4c20c552e9de3a0253704d6a9d2766e8fdb88e4d6ac4bae9388fe  $RUNNER_TEMP/binaryen.tar.gz" | sha256sum -c -
+          tar xzf "$RUNNER_TEMP/binaryen.tar.gz" -C "$RUNNER_TEMP"
           echo "$RUNNER_TEMP/binaryen-version_123/bin" >> "$GITHUB_PATH"
           "$RUNNER_TEMP/binaryen-version_123/bin/wasm-opt" --version
 
