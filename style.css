@@ -332,6 +332,8 @@ h1, h2, h3, .mono, .brand, .eyebrow, .stats strong, .nav nav a, .btn, .filters b
    it will settle and fades in there. Each section is at least a screen tall so
    the two line up; long ones still scroll normally in between.
    80px is html's scroll-padding-top, which view() treats as the screen's top.
+   Arriving and leaving are one animation, so Chrome can composite it: two on
+   the same properties would both run on the main thread and lag the scroll.
    None of it applies for visitors who ask for reduced motion. */
 @supports (animation-timeline: view()) {
   @media (prefers-reduced-motion: no-preference) {
@@ -339,19 +341,37 @@ h1, h2, h3, .mono, .brand, .eyebrow, .stats strong, .nav nav a, .btn, .filters b
       min-height: calc(100vh - 80px);
       align-content: center;
       transform-origin: 50% calc(100% - (100dvh - 80px) / 2);
-      animation: section-in linear forwards, section-out linear both, section-waiting linear;
+      animation: section-swap linear forwards, section-inert linear, section-inert linear forwards;
       animation-timeline: view(), view(), view();
-      animation-range: entry, exit, entry 0% entry 50%;
+      animation-range: normal, entry 0% entry 50%, exit 50% exit 100%;
     }
+    /* Block Coders slides up into view like a normal page, over the section
+       fading out behind it. */
+    #game { animation-name: section-leave, none, section-inert; }
     /* The last one stays: holding it still would pin it over the footer. */
-    main > section:last-child { animation-name: section-in, none, section-waiting; }
+    main > section:last-child { animation-name: section-arrive, section-inert, none; }
   }
 }
-@keyframes section-in { from { opacity: 0; translate: 0 calc(80px - 100dvh); } 50% { opacity: 0; } }
-@keyframes section-out { 50% { opacity: 0; scale: 0.94; } to { opacity: 0; translate: 0 calc(100dvh - 80px); } }
-/* An arriving section sits on top while it's still invisible: let clicks
-   through to the one on screen. Separate, so the fades stay off the main thread. */
-@keyframes section-waiting { from, to { pointer-events: none; } }
+@keyframes section-swap {
+  entry 0% { opacity: 0; translate: 0 calc(80px - 100dvh); }
+  entry 50% { opacity: 0; }
+  entry 100%, exit 0% { opacity: 1; translate: none; scale: none; }
+  exit 50% { opacity: 0; scale: 0.94; }
+  exit 100% { opacity: 0; scale: 0.94; translate: 0 calc(100dvh - 80px); }
+}
+@keyframes section-arrive {
+  entry 0% { opacity: 0; translate: 0 calc(80px - 100dvh); }
+  entry 50% { opacity: 0; }
+  entry 100% { opacity: 1; translate: none; }
+}
+@keyframes section-leave {
+  exit 0% { opacity: 1; translate: none; scale: none; }
+  exit 50% { opacity: 0; scale: 0.94; }
+  exit 100% { opacity: 0; scale: 0.94; translate: 0 calc(100dvh - 80px); }
+}
+/* An invisible section doesn't take clicks: one arriving on top of the
+   section on screen, or one that has faded out. */
+@keyframes section-inert { from, to { pointer-events: none; } }
 
 /* Everywhere else (Firefox 158): content dissolves into the page colour at the
    bottom edge as it scrolls up, still with no script. Sticky inside main, so it
