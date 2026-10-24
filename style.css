@@ -109,9 +109,10 @@
   --border: #262b40;
   --text: #e7e9f2;
   --muted: #9097b0;
-  --accent: #7c5cff;
+  --accent: #22c3d6;
+  --on-accent: #0b0d14;
   --accent-2: #20c3a6;
-  --apps: #b45cff;
+  --apps: #c27bff;
   --automate: #2e8bff;
   --js: #f0c419;
   --shadow: 0 10px 30px rgb(0 0 0 / 0.35);
@@ -124,8 +125,9 @@
   --border: #e1e4ef;
   --text: #171a26;
   --muted: #5d647d;
-  --accent: #5b3df5;
-  --accent-2: #0f9e86;
+  --accent: #0b6680;
+  --on-accent: #fff;
+  --accent-2: #096f5f;
   --apps: #8d33db;
   --automate: #1767d6;
   --js: #b38b00;
@@ -193,7 +195,7 @@ section { padding: 72px 0 24px; }
 }
 .btn:hover { transform: translateY(-1px); border-color: var(--accent); text-decoration: none; }
 .btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
-.btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
 .btn.ghost { background: transparent; }
 
 /* ---------- Cards & grids ---------- */
@@ -265,7 +267,8 @@ section { padding: 72px 0 24px; }
 .play-overlay:hover { background: linear-gradient(to top, rgb(0 0 0 / 0.8), rgb(0 0 0 / 0.3)); }
 .play-icon {
   width: 72px; height: 72px; border-radius: 50%; display: grid; place-items: center; font-size: 1.6rem;
-  background: var(--accent); box-shadow: 0 0 0 8px color-mix(in srgb, var(--accent) 30%, transparent);
+  background: var(--accent); color: var(--on-accent);
+  box-shadow: 0 0 0 8px color-mix(in srgb, var(--accent) 30%, transparent);
 }
 .thumbs { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.6rem; margin-top: 0.75rem; }
 .thumb { padding: 0; border: 2px solid transparent; border-radius: 8px; overflow: hidden; cursor: pointer; background: none; opacity: 0.6; transition: opacity 0.15s; }
@@ -345,9 +348,9 @@ h1, h2, h3, .mono, .brand, .eyebrow, .stats strong, .nav nav a, .btn, .filters b
       animation-timeline: view(), view(), view();
       animation-range: normal, entry 0% entry 50%, exit 50% exit 100%;
     }
-    /* Block Coders slides up into view like a normal page, over the section
-       fading out behind it. */
-    #game { animation-name: section-leave, none, section-inert; }
+    /* About and Block Coders slide up into view like a normal page, over the
+       section fading out behind them. */
+    #about, #game { animation-name: section-leave, none, section-inert; }
     /* The last one stays: holding it still would pin it over the footer. */
     main > section:last-child { animation-name: section-arrive, section-inert, none; }
   }
