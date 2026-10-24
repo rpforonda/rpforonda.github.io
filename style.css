@@ -322,19 +322,36 @@ h1, h2, h3, .mono, .brand, .eyebrow, .stats strong, .nav nav a, .btn, .filters b
 
 @keyframes fade-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
 
-/* ---------- Scroll fades ----------
-   Each section fades in as it scrolls into view and out as it leaves, tied to
-   the scroll position, with no script. Browsers with view timelines (Chrome and
-   Edge 115+, Safari 26+) run it off the main thread. */
+/* ---------- Stacked sections ----------
+   The sections look stacked in one place and appear in turn as you scroll,
+   with no script. Browsers with view timelines (Chrome and Edge 115+, Safari
+   26+) run it off the main thread.
+   Each change takes one screen of scrolling. The leaving section is moved down
+   by what's been scrolled, so it holds still while it shrinks back and fades
+   out. The arriving one is moved up by what's left to scroll, so it waits where
+   it will settle and fades in there. Each section is at least a screen tall so
+   the two line up; long ones still scroll normally in between.
+   80px is html's scroll-padding-top, which view() treats as the screen's top.
+   None of it applies for visitors who ask for reduced motion. */
 @supports (animation-timeline: view()) {
-  main > section {
-    animation: section-in linear both, section-out linear both;
-    animation-timeline: view(), view();
-    animation-range: entry 0% entry 40%, exit 60% exit 100%;
+  @media (prefers-reduced-motion: no-preference) {
+    main > section {
+      min-height: calc(100vh - 80px);
+      align-content: center;
+      transform-origin: 50% calc(100% - (100dvh - 80px) / 2);
+      animation: section-in linear forwards, section-out linear both, section-waiting linear;
+      animation-timeline: view(), view(), view();
+      animation-range: entry, exit, entry 0% entry 50%;
+    }
+    /* The last one stays: holding it still would pin it over the footer. */
+    main > section:last-child { animation-name: section-in, none, section-waiting; }
   }
 }
-@keyframes section-in { from { opacity: 0; } }
-@keyframes section-out { to { opacity: 0; } }
+@keyframes section-in { from { opacity: 0; translate: 0 calc(80px - 100dvh); } 50% { opacity: 0; } }
+@keyframes section-out { 50% { opacity: 0; scale: 0.94; } to { opacity: 0; translate: 0 calc(100dvh - 80px); } }
+/* An arriving section sits on top while it's still invisible: let clicks
+   through to the one on screen. Separate, so the fades stay off the main thread. */
+@keyframes section-waiting { from, to { pointer-events: none; } }
 
 /* Everywhere else (Firefox 158): content dissolves into the page colour at the
    bottom edge as it scrolls up, still with no script. Sticky inside main, so it
