@@ -15,7 +15,8 @@ pub fn Hero() -> impl IntoView {
                 <MailLink
                     class="btn"
                     title="My résumé is shared on request, so it isn't published here"
-                    query=resume_request_query()
+                    subject=RESUME_REQUEST_SUBJECT
+                    body=RESUME_REQUEST_BODY
                 >
                     "Request résumé"
                 </MailLink>
@@ -39,27 +40,7 @@ pub fn Hero() -> impl IntoView {
     }
 }
 
-/// Pre-filled subject and body for a résumé request email. The résumé is sent
-/// on request rather than published, to limit what's scraped from the site.
-fn resume_request_query() -> String {
-    let body =
-        "Hi Roel,\n\nI'd like to request your résumé.\n\nName:\nCompany:\nRole I'm hiring for:\n";
-    format!(
-        "?subject={}&body={}",
-        encode(RESUME_REQUEST_SUBJECT),
-        encode(body)
-    )
-}
-
-fn encode(s: &str) -> String {
-    let mut out = String::new();
-    for b in s.bytes() {
-        match b {
-            b'A'..=b'Z' | b'a'..=b'z' | b'0'..=b'9' | b'-' | b'_' | b'.' | b'~' => {
-                out.push(b as char)
-            }
-            _ => out.push_str(&format!("%{b:02X}")),
-        }
-    }
-    out
-}
+/// Pre-filled body for a résumé request email. The résumé is sent on request
+/// rather than published, to limit what's scraped from the site.
+const RESUME_REQUEST_BODY: &str =
+    "Hi Roel,\n\nI'd like to request your résumé.\n\nName:\nCompany:\nRole I'm hiring for:\n";
