@@ -3,6 +3,12 @@ mod data;
 
 use components::*;
 use leptos::prelude::*;
+use leptos::wasm_bindgen::{JsCast, JsValue};
+use web_sys::{HtmlElement, ScrollBehavior, ScrollToOptions};
+
+/// html's scroll-padding-top in style.css: where a section's top lands, just
+/// under the nav.
+const SCROLL_PADDING: f64 = 80.0;
 
 #[component]
 fn App() -> impl IntoView {
@@ -25,6 +31,7 @@ fn main() {
     console_error_panic_hook::set_once();
     mount_to_body(App);
     scroll_to_hash();
+    follow_section_links();
 }
 
 /// The sections only exist once this app has mounted, which is after the
@@ -33,10 +40,53 @@ fn main() {
 fn scroll_to_hash() {
     let Ok(hash) = window().location().hash() else { return };
     let Some(id) = hash.strip_prefix('#').filter(|id| !id.is_empty()) else { return };
-    if let Some(el) = document().get_element_by_id(id) {
-        // Instant, not the page's smooth scrolling: a long glide on load feels broken.
-        let opts = web_sys::ScrollIntoViewOptions::new();
-        opts.set_behavior(web_sys::ScrollBehavior::Instant);
-        el.scroll_into_view_with_scroll_into_view_options(&opts);
+    // Instant, not the page's smooth scrolling: a long glide on load feels broken.
+    scroll_to_section(id, ScrollBehavior::Instant);
+}
+
+/// In-page links (#about and so on) scroll to the section's top. Left to the
+/// browser, they'd aim at where the section appears on screen, which the scroll
+/// animations move: one you've scrolled past sits a screen lower until you come
+/// back to it, so the jump would stop halfway, mid-animation.
+fn follow_section_links() {
+    let _ = window_event_listener(leptos::ev::click, |e| {
+        // Opening in a new tab or window stays the browser's job.
+        if e.default_prevented() || e.button() != 0 || e.ctrl_key() || e.meta_key() || e.shift_key() || e.alt_key() {
+            return;
+        }
+        let Some(link) = e
+            .target()
+            .and_then(|t| t.dyn_into::<web_sys::Element>().ok())
+            .and_then(|el| el.closest("a[href^='#']").ok().flatten())
+        else {
+            return;
+        };
+        let href = link.get_attribute("href").unwrap_or_default();
+        if scroll_to_section(&href[1..], ScrollBehavior::Auto) {
+            e.prevent_default();
+            if window().location().hash().ok().as_deref() != Some(href.as_str()) {
+                let _ = window().history().and_then(|h| h.push_state_with_url(&JsValue::NULL, "", Some(&href)));
+            }
+        }
+    });
+}
+
+/// Scrolls the section's top to just under the nav, going by its place in the
+/// layout, which transforms don't change. Auto follows the page's smooth
+/// scrolling (off for reduced motion). False if there's no such section.
+fn scroll_to_section(id: &str, behavior: ScrollBehavior) -> bool {
+    let Some(el) = document().get_element_by_id(id).and_then(|e| e.dyn_into::<HtmlElement>().ok()) else {
+        return false;
+    };
+    let mut top = 0;
+    let mut node = Some(el);
+    while let Some(n) = node {
+        top += n.offset_top();
+        node = n.offset_parent().and_then(|p| p.dyn_into::<HtmlElement>().ok());
     }
+    let opts = ScrollToOptions::new();
+    opts.set_top(f64::from(top) - SCROLL_PADDING);
+    opts.set_behavior(behavior);
+    window().scroll_to_with_scroll_to_options(&opts);
+    true
 }
