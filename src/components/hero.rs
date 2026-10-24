@@ -1,5 +1,5 @@
 use crate::data::{GITHUB, LINKEDIN, LOCATION, RESUME_REQUEST_SUBJECT, ROLE, STATS, TAGLINE};
-use crate::mail;
+use crate::mail::MailLink;
 use leptos::prelude::*;
 
 #[component]
@@ -11,18 +11,14 @@ pub fn Hero() -> impl IntoView {
             <p class="lead">{TAGLINE}</p>
             <div class="cta-row">
                 <a class="btn primary" href="#work">"See my work"</a>
-                <a class="btn" href="#" on:click=|ev| { ev.prevent_default(); mail::compose("") }>"Email me"</a>
-                <a
+                <MailLink class="btn">"Email me"</MailLink>
+                <MailLink
                     class="btn"
-                    href="#"
-                    on:click=|ev| {
-                        ev.prevent_default();
-                        mail::compose(&resume_request_query())
-                    }
                     title="My résumé is shared on request, so it isn't published here"
+                    query=resume_request_query()
                 >
                     "Request résumé"
-                </a>
+                </MailLink>
                 <a class="btn ghost" href=GITHUB target="_blank" rel="noopener">"GitHub"</a>
                 <a class="btn ghost" href=LINKEDIN target="_blank" rel="noopener">"LinkedIn"</a>
             </div>

@@ -1,5 +1,5 @@
 use crate::data::{GITHUB, LINKEDIN, NAME};
-use crate::mail;
+use crate::mail::{self, MailLink};
 use leptos::prelude::*;
 
 #[component]
@@ -8,7 +8,7 @@ pub fn Footer() -> impl IntoView {
         <footer>
             <p>"© 2026 " {NAME} " · Built with Rust, Leptos & WebAssembly"</p>
             <p>
-                <a href="#" on:click=|ev| { ev.prevent_default(); mail::compose("") }>"Email"</a>
+                <MailLink>{mail::written_out()}</MailLink>
                 " · "
                 <a href=GITHUB target="_blank" rel="noopener">"GitHub"</a>
                 " · "
