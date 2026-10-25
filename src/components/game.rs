@@ -13,6 +13,11 @@ fn is_phone() -> bool {
         .is_some_and(|mq| mq.matches())
 }
 
+/// How wide the screenshot shows, for picking from its srcset: the page width
+/// less main's and the card's padding and border, up to main's 1120px.
+/// Thumbnails show at most ~150px wide, so their 320w file covers 2x screens.
+const STAGE_SIZES: &str = "(max-width: 1120px) calc(100vw - 66px), 1054px";
+
 /// Featured Block Coders section. The game is a separate macroquad wasm build
 /// served from play/, so it's embedded in an iframe and only loaded on click.
 #[component]
@@ -32,8 +37,11 @@ pub fn FeaturedGame() -> impl IntoView {
                         fallback=move || {
                             view! {
                                 <img
-                                    src=move || GAME.shots[shot.get()].0
-                                    alt=move || GAME.shots[shot.get()].1
+                                    src=move || GAME.shots[shot.get()].full
+                                    srcset=move || GAME.shots[shot.get()].srcset
+                                    sizes=STAGE_SIZES
+                                    loading="lazy"
+                                    alt=move || GAME.shots[shot.get()].alt
                                 />
                                 <button
                                     class="play-overlay"
@@ -63,7 +71,7 @@ pub fn FeaturedGame() -> impl IntoView {
                         .shots
                         .iter()
                         .enumerate()
-                        .map(|(i, (src, alt))| {
+                        .map(|(i, s)| {
                             view! {
                                 <button
                                     class="thumb"
@@ -73,7 +81,7 @@ pub fn FeaturedGame() -> impl IntoView {
                                         set_shot.set(i);
                                     }
                                 >
-                                    <img src=*src alt=*alt loading="lazy"/>
+                                    <img src=s.thumb alt=s.alt loading="lazy"/>
                                 </button>
                             }
                         })

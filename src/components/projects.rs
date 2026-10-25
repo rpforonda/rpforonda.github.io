@@ -49,10 +49,7 @@ pub fn Projects() -> impl IntoView {
 fn ProjectCard(project: &'static Project) -> impl IntoView {
     view! {
         <article class="card project">
-            <div class="tags">
-                <span class=format!("tag {}", project.category.class())>{project.category.label()}</span>
-                {project.sample.then(|| view! { <span class="tag tag-sample">"Sample: replace me"</span> })}
-            </div>
+            <span class=format!("tag {}", project.category.class())>{project.category.label()}</span>
             <h3>{project.title}</h3>
             <dl>
                 <dt>"Problem"</dt>

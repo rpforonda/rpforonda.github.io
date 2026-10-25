@@ -17,7 +17,8 @@
     <meta name="twitter:card" content="summary_large_image" />
     <link rel="preload" href="public/fonts/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="public/fonts/ibm-plex-mono-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin />
-    <link data-trunk rel="css" href="style.css" />
+    <!-- Not minified: the minifier rewrites media queries in a form Safari before 16.4 ignores. -->
+    <link data-trunk rel="css" href="style.css" data-no-minify />
     <link data-trunk rel="copy-dir" href="public" />
     <link data-trunk rel="copy-dir" href="play" />
     <link data-trunk rel="copy-file" href="googleb5237c160152a9a7.html" />

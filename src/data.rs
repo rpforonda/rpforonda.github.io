@@ -117,25 +117,16 @@ pub const SKILLS: &[SkillGroup] = &[
 
 #[derive(Clone, Copy, PartialEq, Eq)]
 pub enum Category {
-    #[allow(dead_code)]
-    // no Power Platform projects listed yet; its filter appears once one is added
-    PowerPlatform,
     SharePoint,
     Web,
     FullStack,
 }
 
 impl Category {
-    pub const ALL: [Category; 4] = [
-        Category::Web,
-        Category::SharePoint,
-        Category::FullStack,
-        Category::PowerPlatform,
-    ];
+    pub const ALL: [Category; 3] = [Category::Web, Category::SharePoint, Category::FullStack];
 
     pub fn label(self) -> &'static str {
         match self {
-            Category::PowerPlatform => "Power Platform",
             Category::SharePoint => "SharePoint",
             Category::Web => "Web / JS",
             Category::FullStack => "Full-stack",
@@ -144,7 +135,6 @@ impl Category {
 
     pub fn class(self) -> &'static str {
         match self {
-            Category::PowerPlatform => "tag-apps",
             Category::SharePoint => "tag-automate",
             Category::Web => "tag-js",
             Category::FullStack => "tag-full",
@@ -162,8 +152,6 @@ pub struct Project {
     pub stack: &'static [&'static str],
     /// (label, url) pairs shown at the bottom of the card.
     pub links: &'static [(&'static str, &'static str)],
-    /// Placeholder content you still need to replace. Shows a "Sample" badge.
-    pub sample: bool,
 }
 
 pub const PROJECTS: &[Project] = &[
@@ -179,7 +167,6 @@ pub const PROJECTS: &[Project] = &[
             ("Live site", "https://catchupwithalice.com"),
             ("Code", "https://github.com/rpforonda/byaliceforonda"),
         ],
-        sample: false,
     },
     Project {
         // NOTE: private repo for a government program, so keep the description generic.
@@ -191,7 +178,6 @@ pub const PROJECTS: &[Project] = &[
         result: "Turned a flat list into a visual, printable briefing tool that improved operational efficiency and data accessibility.",
         stack: &["Next.js", "TypeScript", "React Leaflet", "SharePoint REST", "Tailwind"],
         links: &[],
-        sample: false,
     },
     Project {
         id: 7,
@@ -202,7 +188,6 @@ pub const PROJECTS: &[Project] = &[
         result: "A more secure, faster and more user-friendly portal for its users.",
         stack: &["Svelte", "JavaScript", "SharePoint", "CSS"],
         links: &[],
-        sample: false,
     },
     Project {
         id: 3,
@@ -213,7 +198,6 @@ pub const PROJECTS: &[Project] = &[
         result: "In progress.", // TODO: update when shipped
         stack: &["Next.js 15", "React 19", "TypeScript", "PnPjs", "Tailwind"],
         links: &[],
-        sample: false,
     },
     Project {
         id: 4,
@@ -228,7 +212,6 @@ pub const PROJECTS: &[Project] = &[
             ("C# API", "https://github.com/rpforonda/Middle-Tier"),
             ("SQL", "https://github.com/rpforonda/Back-End"),
         ],
-        sample: false,
     },
 ];
 
@@ -333,30 +316,54 @@ pub struct Game {
     pub play_url: &'static str,
     pub features: &'static [&'static str],
     pub stack: &'static [&'static str],
-    /// (image path, caption)
-    pub shots: &'static [(&'static str, &'static str)],
+    pub shots: &'static [Shot],
+}
+
+/// A screenshot in the three widths scripts/screenshots.sh writes.
+pub struct Shot {
+    /// 1280 wide.
+    pub full: &'static str,
+    /// The 640 and 1280 wide files, for the big picture.
+    pub srcset: &'static str,
+    /// 320 wide, for the thumbnail.
+    pub thumb: &'static str,
+    pub alt: &'static str,
+}
+
+/// shot!("boss", "Caption") for public/block-coders/boss.webp and its smaller copies.
+macro_rules! shot {
+    ($name:literal, $alt:literal) => {
+        Shot {
+            full: concat!("public/block-coders/", $name, ".webp"),
+            srcset: concat!("public/block-coders/", $name, "-640.webp 640w, public/block-coders/", $name, ".webp 1280w"),
+            thumb: concat!("public/block-coders/", $name, "-320.webp"),
+            alt: $alt,
+        }
+    };
 }
 
 pub const GAME: Game = Game {
     title: "Block Coders",
-    pitch: "A blocky, Minecraft-style coding game, written in Rust, that teaches kids aged 8–12 to think like programmers. They snap code blocks together to guide a miner through 66 levels across seven worlds: sequences, loops, functions, if/else, while loops and algorithms, and variables.",
+    pitch: "A blocky, Minecraft-style coding game, written in Rust, that teaches kids aged 8–12 to think like programmers. They snap code blocks together to guide a miner through 72 levels across seven worlds: sequences, loops, functions, if/else, while loops and algorithms, and variables.",
     repo: "https://github.com/rpforonda/block-coders",
     play_url: "play/index.html",
     features: &[
-        "34 dynamic levels that reshuffle on every run, so memorized paths fail and real logic wins",
+        "37 dynamic levels that reshuffle on every run, so memorized paths fail and real logic wins",
         "Anti-luck checks: winning programs are quietly re-tested against 80 variants of the level",
         "Step-through debugger that highlights the running block, and smart hints that read the kid's own program",
+        "Rewards that teach: a 3-stage boss fight tests each world's idea, and stars for short programs unlock a Wardrobe of gear",
         "\"Show Rust code\" turns block programs into real, syntax-highlighted Rust",
         "Built for kids new to computers: a guided tour, readable text (WCAG AA contrast, the Atkinson Hyperlegible font) and layouts for phones held either way",
         "A tiny compiler and VM, and procedurally generated pixel art and sound",
     ],
     stack: &["Rust", "macroquad", "WebAssembly", "Custom VM"],
     shots: &[
-        ("public/block-coders/if-else-level.webp", "A dynamic If/Else level in the Decision Desert, running"),
-        ("public/block-coders/rust-code.webp", "Show Rust code: a function with while loops"),
-        ("public/block-coders/functions.webp", "A function running in its own tab"),
-        ("public/block-coders/variables.webp", "Counting Caverns: the count variable shown as a box while the program runs"),
-        ("public/block-coders/tour.webp", "The guided tour on level 1"),
-        ("public/block-coders/levels.webp", "Level select: seven worlds"),
+        shot!("boss", "Boss fight: Mossback, stage 1 of 3, at the end of the Grassy Plains"),
+        shot!("if-else-level", "A dynamic If/Else level in the Decision Desert, running"),
+        shot!("rust-code", "Show Rust code: a function with while loops"),
+        shot!("functions", "A function running in its own tab"),
+        shot!("variables", "Counting Caverns: the count variable shown as a box while the program runs"),
+        shot!("tour", "The guided tour on level 1"),
+        shot!("levels", "Level select: seven worlds, with boss fights and World Checks"),
     ],
 };

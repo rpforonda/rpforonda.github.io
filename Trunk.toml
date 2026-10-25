@@ -1,6 +1,9 @@
 [build]
 target = "index.html"
 dist = "dist"
+# Release builds minify the HTML and JS glue (style.css opts out in index.html;
+# the .wasm goes through wasm-opt).
+minify = "on_release"
 
 [serve]
 port = 8080
