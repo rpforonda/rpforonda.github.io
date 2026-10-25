@@ -138,6 +138,7 @@
 html { scroll-behavior: smooth; scroll-padding-top: 80px; }
 body {
   margin: 0;
+  overflow-x: clip;
   background: var(--bg);
   color: var(--text);
   font-family: Inter, system-ui, sans-serif;
@@ -185,18 +186,51 @@ section { padding: 72px 0 24px; }
 .stats strong { display: block; font-size: 2rem; font-weight: 700; }
 .stats span { color: var(--muted); font-size: 0.9rem; }
 
-/* ---------- Buttons ---------- */
+/* ---------- Buttons ----------
+   The edge is the strip of the button left uncovered by its fill (::after). A
+   conic gradient spins behind the fill (::before): only its rotation animates,
+   so it runs off the main thread. It always spins on the primary button, and
+   on the others while hovered or focused. Inside, a soft glow follows the
+   cursor; main.rs keeps --x and --y on the button under it. */
+@property --glow { syntax: "<percentage>"; inherits: true; initial-value: 0%; }
 .btn {
+  --fill: var(--card); --edge: var(--border); --ring: var(--accent); --ring-2: var(--accent-2); --shine: var(--accent);
+  --edge-w: 1.5px;
+  position: relative; isolation: isolate; overflow: hidden;
   display: inline-flex; align-items: center; gap: 0.4rem;
-  padding: 0.7rem 1.2rem; border-radius: 10px;
-  border: 1px solid var(--border); background: var(--card); color: var(--text);
+  padding: calc(0.7rem + var(--edge-w)) calc(1.2rem + var(--edge-w)); border: 0; border-radius: 10px;
+  background: var(--edge); color: var(--text);
   font: inherit; font-weight: 600; cursor: pointer;
-  transition: transform 0.15s, border-color 0.15s;
+  transition: transform 0.15s, box-shadow 0.25s, --glow 0.25s;
 }
-.btn:hover { transform: translateY(-1px); border-color: var(--accent); text-decoration: none; }
-.btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
-.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
-.btn.ghost { background: transparent; }
+.btn::before {
+  content: ""; position: absolute; z-index: -2; top: 50%; left: 50%;
+  width: 200%; aspect-ratio: 1; translate: -50% -50%;
+  background: conic-gradient(transparent 0 55%, var(--ring-2) 75%, var(--ring) 90%, transparent);
+  opacity: 0; transition: opacity 0.25s;
+  animation: btn-spin 3s linear infinite paused;
+}
+.btn::after {
+  content: ""; position: absolute; z-index: -1; inset: var(--edge-w); border-radius: calc(10px - var(--edge-w));
+  background:
+    radial-gradient(1.6rem circle at var(--x, 50%) var(--y, 50%), color-mix(in oklab, var(--shine) var(--glow), transparent), transparent),
+    var(--fill);
+}
+.btn:is(:hover, :focus-visible) {
+  --glow: 32%;
+  transform: translateY(-1px); text-decoration: none;
+  box-shadow: 0 0 1.25rem -0.4rem var(--accent);
+}
+.btn:is(:hover, :focus-visible, .primary)::before { opacity: 1; animation-play-state: running; }
+.btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none; --glow: 0%; }
+.btn:disabled::before { opacity: 0; }
+.btn.primary {
+  --fill: var(--accent); --edge: var(--accent); --shine: #fff; --edge-w: 2px;
+  --ring: #fff; --ring-2: color-mix(in oklab, var(--accent), #fff 50%);
+  color: var(--on-accent);
+}
+.btn.ghost { --fill: var(--bg); }
+@keyframes btn-spin { to { rotate: 1turn; } }
 
 /* ---------- Cards & grids ---------- */
 .grid { display: grid; gap: 1.25rem; }
@@ -208,15 +242,37 @@ section { padding: 72px 0 24px; }
 }
 .card-icon {
   width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center;
-  background: color-mix(in srgb, var(--accent) 15%, transparent); color: var(--accent);
+  background: color-mix(in srgb, var(--c, var(--accent)) 15%, transparent); color: var(--c, var(--accent));
   font-weight: 700; margin-bottom: 1rem;
 }
 .chips { display: flex; flex-wrap: wrap; gap: 0.4rem; list-style: none; padding: 0; margin: 0.75rem 0 0; }
 .chips li {
   font-size: 0.85rem; padding: 0.2rem 0.6rem; border-radius: 999px;
-  background: var(--bg-2); border: 1px solid var(--border); color: var(--muted);
+  text-align: center; text-wrap: balance;
+  background: color-mix(in oklab, var(--c, var(--accent)) 12%, var(--card));
+  border: 1px solid color-mix(in oklab, var(--c, var(--accent)) 35%, var(--border));
+  color: color-mix(in oklab, var(--c, var(--accent)) 65%, var(--text));
 }
 .chips.small li { font-size: 0.75rem; }
+
+/* ---------- Card colours ----------
+   Skill and project cards each wear one colour from the palette (--c) on
+   their pills, icon tile, a faint wash at the top and, in the fan, the hover
+   glow. Skills go by position (Power Platform purple and Front-end yellow,
+   like those project categories); projects take their category tag's colour.
+   Pills anywhere else use the accent. */
+#skills .card:nth-child(1) { --c: var(--apps); }
+#skills .card:nth-child(2) { --c: var(--js); }
+#skills .card:nth-child(3) { --c: var(--automate); }
+#skills .card:nth-child(4) { --c: var(--accent-2); }
+#skills .card:nth-child(5) { --c: var(--accent); }
+.project:has(.tag-apps) { --c: var(--apps); }
+.project:has(.tag-automate) { --c: var(--automate); }
+.project:has(.tag-js) { --c: var(--js); }
+.project:has(.tag-full) { --c: var(--accent-2); }
+#skills .card, .project {
+  background: linear-gradient(color-mix(in oklab, var(--c) 10%, var(--card)), var(--card) 10rem);
+}
 
 /* ---------- Projects ---------- */
 .filters { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.5rem; }
@@ -321,6 +377,64 @@ footer {
 h1, h2, h3, .mono, .brand, .eyebrow, .stats strong, .nav nav a, .btn, .filters button,
 .play-overlay, .tag, .chips li, .project dt, .card-links, .card-icon {
   font-family: "IBM Plex Mono", ui-monospace, monospace;
+}
+
+/* ---------- Trimmed text ----------
+   Text normally sits in a line box with spare room above the capitals and
+   below the baseline, so padding looks heavier on one side. Trimming the line
+   to cap height and baseline makes the padding what you see: these paddings
+   keep each box's old height, now split evenly. Chrome 133+, Safari 18.2+;
+   elsewhere the old padding stays. */
+@supports (text-box: trim-both cap alphabetic) {
+  .btn, .filters button, .chips li, .tag, .card {
+    text-box: trim-both cap alphabetic;
+  }
+  /* Trimming works on block boxes, not flex ones. */
+  .btn { display: inline-block; padding: calc(1.15rem + var(--edge-w)) calc(1.2rem + var(--edge-w)); }
+  .filters button { padding: 0.9rem 1rem; }
+  .chips li { padding: 0.55rem 0.6rem; }
+  .tag { padding: 0.55rem 0.6rem; }
+}
+
+/* ---------- Fanned cards ----------
+   The skills are held like a hand of cards. All five share one grid cell, so
+   they come out the same size: one width, and the tallest card's height.
+   Each is then swung round a point far below the hand, turned a little
+   further from the middle and set along that arc. The arc's radius follows
+   the width available, so the hand always fits. The card under the cursor
+   (or holding keyboard focus) is drawn out: it straightens, rises to the
+   front and the others step aside. While it's up, a strip below it keeps the
+   hover, so the spot it rose from doesn't drop it straight back.
+   The page is clipped sideways (body) so, at the narrowest, the hand never
+   adds a horizontal scrollbar.
+   sibling-index() and sibling-count() place each card; browsers without them
+   (and touch screens, which can't hover) keep the plain grid. */
+@supports (order: sibling-index()) {
+  @media (hover: hover) and (pointer: fine) and (min-width: 900px) {
+    #skills .grid {
+      container-type: inline-size;
+      grid-template-columns: 240px; justify-content: center;
+      padding-block: 2.5rem 3.5rem;
+    }
+    #skills .card {
+      --a: calc((sibling-index() - (sibling-count() + 1) / 2) * 6deg);
+      --r: 150cqi;
+      grid-area: 1 / 1; position: relative;
+      rotate: var(--a);
+      translate: calc(sin(var(--a)) * var(--r) + var(--push, 0px)) calc((1 - cos(var(--a))) * var(--r));
+      transition: rotate 0.45s, translate 0.45s, scale 0.45s, box-shadow 0.45s, border-color 0.45s;
+      transition-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+    #skills .card:is(:hover, :focus-within) {
+      z-index: 1; rotate: 0deg; scale: 1.06;
+      translate: calc(sin(var(--a)) * var(--r)) -1.5rem;
+      border-color: color-mix(in oklab, var(--c) 60%, var(--border));
+      box-shadow: var(--shadow), 0 0 2.5rem -1rem var(--c);
+    }
+    #skills .card:is(:hover, :focus-within)::after { content: ""; position: absolute; inset: 100% 0 -4rem; }
+    #skills .card:has(~ .card:is(:hover, :focus-within)) { --push: -1.5rem; }
+    #skills .card:is(:hover, :focus-within) ~ .card { --push: 1.5rem; }
+  }
 }
 
 @keyframes fade-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }

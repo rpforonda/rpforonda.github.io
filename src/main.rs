@@ -38,6 +38,26 @@ fn main() {
     mount_to_body(App);
     scroll_to_hash();
     follow_section_links();
+    track_button_glow();
+}
+
+/// The glow inside a button sits under the cursor: keep the cursor's spot on
+/// the button in --x and --y for style.css. One listener for the whole page.
+fn track_button_glow() {
+    let _ = window_event_listener(leptos::ev::pointermove, |e| {
+        let Some(btn) = e
+            .target()
+            .and_then(|t| t.dyn_into::<web_sys::Element>().ok())
+            .and_then(|el| el.closest(".btn").ok().flatten())
+            .and_then(|el| el.dyn_into::<HtmlElement>().ok())
+        else {
+            return;
+        };
+        let rect = btn.get_bounding_client_rect();
+        let style = btn.style();
+        let _ = style.set_property("--x", &format!("{}px", f64::from(e.client_x()) - rect.left()));
+        let _ = style.set_property("--y", &format!("{}px", f64::from(e.client_y()) - rect.top()));
+    });
 }
 
 /// The sections only exist once this app has mounted, which is after the
