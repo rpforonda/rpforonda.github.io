@@ -1,16 +1,8 @@
 /* ---------- Fonts (self-hosted, SIL OFL 1.1; see public/fonts/*-LICENSE.txt) ----------
    Served from this site so visitors' browsers never contact a third-party font CDN.
-   Source: @fontsource-variable/inter and @fontsource/ibm-plex-mono 5.3.0. */
-/* inter-latin-ext-wght-normal */
-@font-face {
-  font-family: 'Inter';
-  font-style: normal;
-  font-display: swap;
-  font-weight: 100 900;
-  src: url(public/fonts/inter-latin-ext-wght-normal.woff2) format('woff2-variations');
-  unicode-range: U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF;
-}
-
+   Source: @fontsource-variable/inter and @fontsource/ibm-plex-mono 5.3.0. Latin
+   subset only: the content is English. Accented letters outside it would fall
+   back to the system font; add the latin-ext files from the same packages then. */
 /* inter-latin-wght-normal */
 @font-face {
   font-family: 'Inter';
@@ -19,16 +11,6 @@
   font-weight: 100 900;
   src: url(public/fonts/inter-latin-wght-normal.woff2) format('woff2-variations');
   unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
-}
-
-/* ibm-plex-mono-latin-ext-400-normal */
-@font-face {
-  font-family: 'IBM Plex Mono';
-  font-style: normal;
-  font-display: swap;
-  font-weight: 400;
-  src: url(public/fonts/ibm-plex-mono-latin-ext-400-normal.woff2) format('woff2');
-  unicode-range: U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF;
 }
 
 /* ibm-plex-mono-latin-400-normal */
@@ -41,16 +23,6 @@
   unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
 }
 
-/* ibm-plex-mono-latin-ext-500-normal */
-@font-face {
-  font-family: 'IBM Plex Mono';
-  font-style: normal;
-  font-display: swap;
-  font-weight: 500;
-  src: url(public/fonts/ibm-plex-mono-latin-ext-500-normal.woff2) format('woff2');
-  unicode-range: U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF;
-}
-
 /* ibm-plex-mono-latin-500-normal */
 @font-face {
   font-family: 'IBM Plex Mono';
@@ -61,16 +33,6 @@
   unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
 }
 
-/* ibm-plex-mono-latin-ext-600-normal */
-@font-face {
-  font-family: 'IBM Plex Mono';
-  font-style: normal;
-  font-display: swap;
-  font-weight: 600;
-  src: url(public/fonts/ibm-plex-mono-latin-ext-600-normal.woff2) format('woff2');
-  unicode-range: U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF;
-}
-
 /* ibm-plex-mono-latin-600-normal */
 @font-face {
   font-family: 'IBM Plex Mono';
@@ -79,16 +41,6 @@
   font-weight: 600;
   src: url(public/fonts/ibm-plex-mono-latin-600-normal.woff2) format('woff2');
   unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
-}
-
-/* ibm-plex-mono-latin-ext-700-normal */
-@font-face {
-  font-family: 'IBM Plex Mono';
-  font-style: normal;
-  font-display: swap;
-  font-weight: 700;
-  src: url(public/fonts/ibm-plex-mono-latin-ext-700-normal.woff2) format('woff2');
-  unicode-range: U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF;
 }
 
 /* ibm-plex-mono-latin-700-normal */
@@ -222,8 +174,6 @@ section { padding: 72px 0 24px; }
   box-shadow: 0 0 1.25rem -0.4rem var(--accent);
 }
 .btn:is(:hover, :focus-visible, .primary)::before { opacity: 1; animation-play-state: running; }
-.btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none; --glow: 0%; }
-.btn:disabled::before { opacity: 0; }
 .btn.primary {
   --fill: var(--accent); --edge: var(--accent); --shine: #fff; --edge-w: 2px;
   --ring: #fff; --ring-2: color-mix(in oklab, var(--accent), #fff 50%);
@@ -258,15 +208,14 @@ section { padding: 72px 0 24px; }
 /* ---------- Card colours ----------
    Skill and project cards each wear one colour from the palette (--c) on
    their pills, icon tile, a faint wash at the top and, in the fan, the hover
-   glow. Skills go by position (Power Platform purple and Front-end yellow,
-   like those project categories); projects take their category tag's colour.
+   glow. Skills go by position (Front-end wears the Web tag's yellow);
+   projects take their category tag's colour.
    Pills anywhere else use the accent. */
 #skills .card:nth-child(1) { --c: var(--apps); }
 #skills .card:nth-child(2) { --c: var(--js); }
 #skills .card:nth-child(3) { --c: var(--automate); }
 #skills .card:nth-child(4) { --c: var(--accent-2); }
 #skills .card:nth-child(5) { --c: var(--accent); }
-.project:has(.tag-apps) { --c: var(--apps); }
 .project:has(.tag-automate) { --c: var(--automate); }
 .project:has(.tag-js) { --c: var(--js); }
 .project:has(.tag-full) { --c: var(--accent-2); }
@@ -288,16 +237,12 @@ section { padding: 72px 0 24px; }
 .project dd { margin: 0.1rem 0 0; }
 .result { font-weight: 600; color: var(--accent-2); margin: 0.75rem 0 0; }
 .card-links { margin-top: auto; padding-top: 1rem; display: flex; flex-wrap: wrap; gap: 1rem; font-weight: 600; }
-.tags { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-bottom: 0.75rem; }
-.tags .tag { margin-bottom: 0; }
 .tag {
   align-self: flex-start; font-size: 0.75rem; font-weight: 700; padding: 0.2rem 0.6rem;
   border-radius: 6px; margin-bottom: 0.75rem;
 }
-.tag-apps { color: var(--apps); background: color-mix(in srgb, var(--apps) 15%, transparent); }
 .tag-automate { color: var(--automate); background: color-mix(in srgb, var(--automate) 15%, transparent); }
 .tag-full { color: var(--accent-2); background: color-mix(in srgb, var(--accent-2) 15%, transparent); }
-.tag-sample { color: var(--muted); background: transparent; border: 1px dashed var(--border); }
 .tag-js { color: var(--js); background: color-mix(in srgb, var(--js) 15%, transparent); }
 
 /* ---------- Certs ---------- */
@@ -326,11 +271,12 @@ section { padding: 72px 0 24px; }
   background: var(--accent); color: var(--on-accent);
   box-shadow: 0 0 0 8px color-mix(in srgb, var(--accent) 30%, transparent);
 }
-.thumbs { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.6rem; margin-top: 0.75rem; }
+/* One column per screenshot, however many there are. */
+.thumbs { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 0.6rem; margin-top: 0.75rem; }
 .thumb { padding: 0; border: 2px solid transparent; border-radius: 8px; overflow: hidden; cursor: pointer; background: none; opacity: 0.6; transition: opacity 0.15s; }
 .thumb:hover, .thumb.active { opacity: 1; }
 .thumb.active { border-color: var(--accent); }
-.thumb img { display: block; width: 100%; aspect-ratio: 16 / 10; object-fit: cover; }
+.thumb img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: cover; }
 .game-note { color: var(--muted); font-size: 0.85rem; margin: 0.75rem 0 0; }
 .game-details { display: grid; grid-template-columns: 1.4fr 1fr; gap: 2rem; margin-top: 1.5rem; align-items: start; }
 .game-features { margin: 0; padding-left: 1.1rem; }
@@ -338,7 +284,7 @@ section { padding: 72px 0 24px; }
 .game-details .cta-row { margin: 1.25rem 0 0; }
 @media (max-width: 760px) {
   .game-details { grid-template-columns: 1fr; }
-  .thumbs { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 0.35rem; }
+  .thumbs { gap: 0.35rem; }
 }
 
 /* ---------- About ---------- */

@@ -29,7 +29,8 @@ fn App() -> impl IntoView {
 }
 
 fn main() {
-    console_error_panic_hook::set_once();
+    // Panics show up in the browser console, which also adds the stack.
+    std::panic::set_hook(Box::new(|info| web_sys::console::error_1(&info.to_string().into())));
     // The deploy bakes a rendered copy of the page into index.html for search
     // engines and link previews (scripts/prerender.sh). Swap it for the live app.
     if let Some(copy) = document().get_element_by_id("prerendered") {
