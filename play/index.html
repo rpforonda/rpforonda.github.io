@@ -45,18 +45,52 @@
     <script src="audio.js"></script>
     <script>
       "use strict";
-      // Sound on iPad and iPhone Safari. audio.js unlocks audio once, on the first
-      // touchstart, then removes its listeners. Safari doesn't count touchstart as a
-      // gesture that may start audio (only touchend, mousedown, keydown), so the game
-      // stayed silent. Retry on every real gesture until the game's AudioContext is
-      // running; this also restarts it after iOS pauses it for a call or app switch.
-      ["touchend", "mousedown", "keydown"].forEach((type) => {
-        document.addEventListener(type, () => {
-          if (typeof audio_context !== "undefined" && audio_context && audio_context.state !== "running") {
-            audio_context.resume();
+      // Sound on iPad and iPhone.
+      //
+      // 1. Silent Mode. iOS plays Web Audio as "ambient" sound, which Silent Mode
+      //    (the iPhone's silent switch, the iPad's Control Center bell) mutes
+      //    completely. Asking for "playback" (iOS 17 and later) plays it anyway, like
+      //    a video. The game's own Sound button still turns it off. This is set
+      //    before audio.js makes its AudioContext (when the game loads).
+      // 2. Older iOS can't be asked, but playing an HTML <audio> element switches the
+      //    page to playback too, so after the first tap a short silent one loops.
+      // 3. Unlocking. audio.js unlocks audio once, on the first touchstart, then
+      //    removes its listeners. Safari doesn't count touchstart as a gesture that
+      //    may start audio, so the game stayed silent. Until the game's AudioContext
+      //    is running, every real gesture resumes it and starts a one-sample silent
+      //    sound on it (some iOS versions need a sound started during the tap). This
+      //    also restarts it after iOS pauses it for a call or an app switch.
+      if (navigator.audioSession) {
+        try { navigator.audioSession.type = "playback"; } catch (e) { /* not allowed: stay ambient */ }
+      }
+      (function () {
+        // A quarter second of silence (8-bit mono WAV), for older iOS.
+        const SILENCE = "data:audio/wav;base64,UklGRvQHAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YdAHAACAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgA==";
+        let silent = null;
+        function wake() {
+          if (!navigator.audioSession && !silent) {
+            silent = document.createElement("audio");
+            silent.setAttribute("playsinline", "");
+            silent.loop = true;
+            silent.src = SILENCE;
+            const playing = silent.play();
+            if (playing) playing.catch(() => { silent = null; });
           }
-        }, true);
-      });
+          if (typeof audio_context === "undefined" || !audio_context || audio_context.state === "running") {
+            return;
+          }
+          audio_context.resume();
+          try {
+            const tick = audio_context.createBufferSource();
+            tick.buffer = audio_context.createBuffer(1, 1, audio_context.sampleRate);
+            tick.connect(audio_context.destination);
+            tick.start(0);
+          } catch (e) { /* not ready yet: the next tap tries again */ }
+        }
+        ["touchend", "pointerup", "click", "mousedown", "keydown"].forEach((type) => {
+          document.addEventListener(type, wake, true);
+        });
+      })();
     </script>
     <!-- Browser saves (localStorage). Copied from the game repo's web/ by scripts/build-game.sh. -->
     <script src="storage.js"></script>

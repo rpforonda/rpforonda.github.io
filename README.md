@@ -91,6 +91,12 @@ its `2d-select.png` is the level select. See `BC_SHOT` in the game's `src/main.r
 If the game's `Cargo.lock` bumps those, copy the new files from `~/.cargo/registry/src/*/<crate>/js/`.
 macroquad's all-in-one `mq_js_bundle.js` isn't used: its websocket plugin throws under `"use strict"`.
 
+Sound on iPad and iPhone needs three things, all in `play/index.html` (not in `audio.js`, so it can still be copied as is):
+iOS mutes Web Audio in Silent Mode, so the page asks for a `"playback"` audio session (`navigator.audioSession`, iOS 17
+and later) and, on older iOS, loops a short silent `<audio>` after the first tap; and until the game's AudioContext is
+running, every tap resumes it and starts a one-sample silent sound on it (`audio.js` only tries on the first
+`touchstart`, which Safari doesn't accept). The game's Sound button still turns sound off.
+
 ## Deploy (GitHub Pages)
 
 1. `git init`, commit, and push to a new GitHub repo.
