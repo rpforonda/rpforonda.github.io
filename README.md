@@ -41,10 +41,16 @@ trunk serve                      # the game is at /play/index.html
 `build-game.sh` asks `cargo metadata` where the build went, so it also works with `CARGO_TARGET_DIR` or a
 `build.target-dir` setting (a hardcoded `target/` path would quietly ship an older build).
 
-On phones, **Play** opens the game's own page (`play/index.html`), which fills the screen. The game lays itself out for
-phones held upright or sideways. Where the browser can go full screen (Android, iPad; not iPhone Safari), a small start
-card offers **Play full screen** once per tab; after that nothing covers the game, since its own buttons sit in every
-corner.
+On phones and tablets, **Play** opens the game's own page (`play/index.html`), which fills the screen. The game lays
+itself out for screens held upright or sideways. On Android, a small start card offers **Play full screen** once per
+tab; after that nothing covers the game, since its own buttons sit in every corner.
+
+On iPad and iPhone the page never uses the browser's full screen. There, WebKit watches taps while a page is full
+screen, and quick tapping (a kid placing blocks) looks like typing on a fake keyboard: it shows a phishing alert ("Typing
+is not allowed in full screen websites") and can leave full screen, and no page can turn that off. Instead, the start
+card suggests adding the game to the Home Screen. `play/manifest.webmanifest`, the `apple-mobile-web-app-*` tags and the
+`play/icon-*.png` icons (Bit, from the game's own icon) make that open the game as its own app, with no browser bars and
+no alert.
 
 The game's fonts (Atkinson Hyperlegible and its Mono) are built into the wasm. `build-game.sh` copies their SIL Open
 Font License texts to `play/licenses/`, so the license ships with the game.

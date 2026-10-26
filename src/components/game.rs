@@ -1,13 +1,13 @@
 use crate::data::GAME;
 use leptos::prelude::*;
 
-/// Phones are too small for the inline 16:10 embed, so they get the full-page
-/// game instead, which lays itself out for the phone (upright or sideways).
-fn is_phone() -> bool {
+/// Phones and tablets get the full-page game instead of the inline 16:10 embed:
+/// it lays itself out for any screen, upright or sideways. Phones are too small
+/// for the embed, and on iPad the full page is the one that can go on the Home
+/// Screen, the only way to play full screen there (see play/index.html).
+fn is_touch_first() -> bool {
     window()
-        .match_media(
-            "(pointer: coarse) and (max-width: 760px), (pointer: coarse) and (max-height: 500px)",
-        )
+        .match_media("(pointer: coarse)")
         .ok()
         .flatten()
         .is_some_and(|mq| mq.matches())
@@ -38,7 +38,7 @@ pub fn FeaturedGame() -> impl IntoView {
                                 <button
                                     class="play-overlay"
                                     on:click=move |_| {
-                                        if is_phone() {
+                                        if is_touch_first() {
                                             let _ = window().location().set_href(GAME.play_url);
                                         } else {
                                             set_playing.set(true);

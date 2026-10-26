@@ -4,6 +4,16 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>Block Coders</title>
+    <!-- Added to the Home Screen, the game opens as its own app, without the
+         browser's bars. On iPad and iPhone that's how to play full screen (see the
+         start card below). -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="apple-mobile-web-app-title" content="Block Coders" />
+    <meta name="theme-color" content="#0b0d14" />
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="icon-180.png" />
     <style>
       html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #0b0d14; }
       canvas { display: block; width: 100%; height: 100%; outline: none; touch-action: none; }
@@ -24,6 +34,7 @@
         border: 2px solid #7c5cff; background: #7c5cff; color: #fff; min-height: 48px; min-width: 220px;
       }
       .btn.ghost { background: transparent; color: #c9c2ff; border-color: #393e57; }
+      #start .tip { margin: 8px 0 0; max-width: 30em; font-size: 16px; font-weight: 500; color: #c9c2ff; }
     </style>
   </head>
   <body>
@@ -34,6 +45,7 @@
       <p id="start-title">Block Coders</p>
       <button class="btn" id="go-full">Play full screen</button>
       <button class="btn ghost" id="go">Play</button>
+      <p class="tip" id="home-tip" hidden>Tip: add Block Coders to your Home Screen (Share, then Add to Home Screen) to play full screen.</p>
     </div>
 
     <!-- Loaders vendored from the game's exact crate versions (see Cargo.lock):
@@ -75,9 +87,16 @@
     <script>
       "use strict";
       // Phones and tablets: the game fits any screen, upright or sideways. Where the
-      // browser can go full screen (Android, iPad; not iPhone Safari), offer it once,
-      // before the game, on a card that then gets out of the way. A floating button
-      // would cover the game's own buttons, which sit in every corner.
+      // browser can go full screen (Android), offer it once, before the game, on a
+      // card that then gets out of the way. A floating button would cover the game's
+      // own buttons, which sit in every corner.
+      //
+      // Never on iPad or iPhone (every browser there is WebKit). While a page is full
+      // screen, WebKit watches the taps, and quick tapping, like a kid placing blocks,
+      // looks to it like typing on a fake keyboard: it shows an alert that the site
+      // may be trying to steal personal information, and can leave full screen. No
+      // page can turn that off. Added to the Home Screen, the game opens as its own
+      // app with no browser bars and no alert, so the card suggests that instead.
       // Presentation only: remembers the choice for this tab, sends nothing anywhere.
       (function () {
         const canvas = document.getElementById("glcanvas");
@@ -86,6 +105,14 @@
         const touch = matchMedia("(pointer: coarse)").matches;
         const canFullscreen = !!(document.fullscreenEnabled || document.webkitFullscreenEnabled);
         const isFullscreen = () => !!(document.fullscreenElement || document.webkitFullscreenElement);
+        // iPadOS says it's a Mac, so also look for a touch screen.
+        const ua = navigator.userAgent;
+        const apple = /iPad|iPhone|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+        const fromHomeScreen = navigator.standalone === true ||
+          matchMedia("(display-mode: standalone), (display-mode: fullscreen)").matches;
+        // Add to Home Screen saves the page Safari shows, so only offer it when that's
+        // this page, not a site with the game in an iframe.
+        const topLevel = window.top === window.self;
         let seen = false;
         try { seen = sessionStorage.getItem("bc-start-seen") === "1"; } catch (e) { /* storage blocked */ }
 
@@ -102,7 +129,16 @@
           } catch (e) { /* the user or browser declined: play in the page */ }
           dismiss();
         });
-        if (touch && canFullscreen && !isFullscreen() && !seen) {
+        if (apple) {
+          if (topLevel && !fromHomeScreen && !seen) {
+            const go = document.getElementById("go");
+            document.getElementById("go-full").hidden = true;
+            document.getElementById("home-tip").hidden = false;
+            go.classList.remove("ghost");
+            start.classList.add("show");
+            go.focus();
+          }
+        } else if (touch && canFullscreen && !isFullscreen() && !seen) {
           start.classList.add("show");
           document.getElementById("go-full").focus();
         }
