@@ -100,7 +100,17 @@ body {
 a { color: var(--accent); text-decoration: none; }
 a:hover { text-decoration: underline; }
 h1, h2, h3 { line-height: 1.15; margin: 0 0 0.5rem; }
-h2 { font-size: clamp(1.6rem, 3vw, 2.2rem); }
+/* Fluid headings grow from their small size on a 40rem-wide screen to their big
+   size at 80rem: size = small + (big - small) * progress(100vw, 40rem, 80rem).
+   progress() (Baseline since 2026) stops at both ends, so it needs no clamp().
+   The clamp() line before it is the same curve for older browsers, which drop
+   the progress() line they can't read. Keep progress() written out in each rule:
+   behind var() an older browser would only find out too late and lose both lines.
+   With rem in every size, text keeps growing when someone zooms in. */
+h2 {
+  font-size: clamp(1.6rem, 1rem + 1.5vw, 2.2rem);
+  font-size: calc(1.6rem + 0.6rem * progress(100vw, 40rem, 80rem));
+}
 
 main { max-width: 1120px; margin: 0 auto; padding: 0 16px; }
 section { padding: 72px 0 24px; }
@@ -131,7 +141,11 @@ section { padding: 72px 0 24px; }
 /* ---------- Hero ---------- */
 .hero { padding: 96px 0 48px; }
 .eyebrow { color: var(--accent-2); font-weight: 600; font-size: 0.9rem; }
-.hero h1 { font-size: clamp(2.4rem, 6vw, 4.2rem); font-weight: 700; letter-spacing: -0.02em; max-width: 20ch; text-wrap: balance; }
+.hero h1 {
+  font-size: clamp(2.4rem, 0.6rem + 4.5vw, 4.2rem);
+  font-size: calc(2.4rem + 1.8rem * progress(100vw, 40rem, 80rem));
+  font-weight: 700; letter-spacing: -0.02em; max-width: 20ch; text-wrap: balance;
+}
 .lead { font-size: 1.25rem; color: var(--muted); max-width: 46ch; }
 .cta-row { display: flex; flex-wrap: wrap; gap: 0.75rem; margin: 2rem 0; }
 .stats { display: flex; flex-wrap: wrap; gap: 2.5rem; list-style: none; padding: 0; margin: 2rem 0 0; }
