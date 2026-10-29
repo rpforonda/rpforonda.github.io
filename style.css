@@ -152,6 +152,22 @@ section { padding: 72px 0 24px; }
 .stats strong { display: block; font-size: 2rem; font-weight: 700; }
 .stats span { color: var(--muted); font-size: 0.9rem; }
 
+/* A cyberpunk voxel skyline sits behind the whole page, in dark mode only. It's
+   fixed to the screen, so it holds still while every section scrolls or swaps
+   in over it. z-index: -1 keeps it under the content but over body's background,
+   which is painted on the canvas. 100lvh is the screen with the mobile toolbars
+   hidden, so no strip shows when they slide away. The SVG keeps its lit
+   district and moon to the right and carries a left scrim for the left-aligned
+   text. Light mode swaps in a daytime copy (pale sky, slate buildings), made by
+   relighting the night one, so dark text reads on it. A fixed layer adds no
+   scroll-time work. */
+body::before {
+  content: ""; position: fixed; top: 0; left: 0; z-index: -1;
+  width: 100%; height: 100lvh; pointer-events: none;
+  background: url("public/voxel-city-bg.svg") center bottom / cover no-repeat;
+}
+:root[data-theme="light"] body::before { background-image: url("public/voxel-city-bg-light.svg"); }
+
 /* ---------- Buttons ----------
    The edge is the strip of the button left uncovered by its fill (::after). A
    conic gradient spins behind the fill (::before): only its rotation animates,
@@ -203,6 +219,14 @@ section { padding: 72px 0 24px; }
 .card {
   background: var(--card); border: 1px solid var(--border);
   border-radius: 16px; padding: 1.5rem; box-shadow: var(--shadow);
+}
+/* A frosted card for running text (About, Experience), so the grey text stays
+   readable over the skyline: 85% card colour keeps it above 5:1 at its worst
+   spot in both themes, and the blur softens the city showing through. */
+.panel {
+  background: color-mix(in srgb, var(--card) 85%, transparent); border: 1px solid var(--border);
+  border-radius: 16px; padding: 1.5rem; box-shadow: var(--shadow);
+  backdrop-filter: blur(8px);
 }
 .card-icon {
   width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center;
@@ -304,6 +328,7 @@ section { padding: 72px 0 24px; }
 /* ---------- About ---------- */
 .about { max-width: 72ch; font-size: 1.1rem; }
 .about p { margin: 0 0 1rem; color: var(--muted); }
+.about p:last-child { margin-bottom: 0; }
 .about p:first-child { color: var(--text); }
 
 /* ---------- Experience ---------- */
@@ -312,8 +337,9 @@ section { padding: 72px 0 24px; }
 .timeline-item::before {
   content: ""; position: absolute; left: calc(-1.5rem - 7px); top: 0.35rem;
   width: 12px; height: 12px; border-radius: 50%;
-  background: var(--accent); box-shadow: 0 0 0 4px var(--bg);
+  background: var(--accent); box-shadow: 0 0 0 4px var(--card);
 }
+.timeline-item:last-child { padding-bottom: 0; }
 .timeline-item:first-child::before { background: var(--accent-2); }
 .timeline-head { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 0.5rem; }
 .timeline-head h3 { margin: 0; }
@@ -449,17 +475,7 @@ h1, h2, h3, .mono, .brand, .eyebrow, .stats strong, .nav nav a, .btn, .filters b
 /* An invisible section doesn't take clicks: one arriving on top of the
    section on screen, or one that has faded out. */
 @keyframes section-inert { from, to { pointer-events: none; } }
-
-/* Everywhere else (Firefox 158): content dissolves into the page colour at the
-   bottom edge as it scrolls up, still with no script. Sticky inside main, so it
-   comes to rest in its own space above the footer and never covers content. */
-@supports not (animation-timeline: view()) {
-  main::after {
-    content: ""; display: block; position: sticky; bottom: 0; height: 15vh;
-    background: linear-gradient(transparent, var(--bg));
-    pointer-events: none;
-  }
-}
+/* Everywhere else (Firefox 158) the sections scroll normally over the skyline. */
 
 /* ---------- Mobile ---------- */
 @media (max-width: 760px) {
