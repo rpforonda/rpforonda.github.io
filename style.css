@@ -152,6 +152,21 @@ section { padding: 72px 0 24px; }
 .stats strong { display: block; font-size: 2rem; font-weight: 700; }
 .stats span { color: var(--muted); font-size: 0.9rem; }
 
+/* A cyberpunk voxel skyline sits behind the hero, in dark mode only. The
+   ::before breaks out of main's 1120px column to the viewport width (left: 50%
+   + 100vw + translate) and stays behind the content (isolate + z-index: -1).
+   The SVG keeps its lit district and moon to the right and carries a left
+   scrim, so the left-aligned text keeps AA contrast at every width (checked
+   over the glyphs on desktop, laptop, tablet and phone). Light mode drops it:
+   a dark city under dark text wouldn't read. Static, so it adds no scroll work. */
+.hero { position: relative; isolation: isolate; }
+.hero::before {
+  content: ""; position: absolute; top: 0; bottom: 0; left: 50%;
+  width: 100vw; transform: translateX(-50%); z-index: -1; pointer-events: none;
+  background: url("public/voxel-city-bg.svg") center bottom / cover no-repeat;
+}
+:root[data-theme="light"] .hero::before { display: none; }
+
 /* ---------- Buttons ----------
    The edge is the strip of the button left uncovered by its fill (::after). A
    conic gradient spins behind the fill (::before): only its rotation animates,
