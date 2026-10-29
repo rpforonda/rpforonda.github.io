@@ -152,20 +152,21 @@ section { padding: 72px 0 24px; }
 .stats strong { display: block; font-size: 2rem; font-weight: 700; }
 .stats span { color: var(--muted); font-size: 0.9rem; }
 
-/* A cyberpunk voxel skyline sits behind the hero, in dark mode only. The
-   ::before breaks out of main's 1120px column to the viewport width (left: 50%
-   + 100vw + translate) and stays behind the content (isolate + z-index: -1).
-   The SVG keeps its lit district and moon to the right and carries a left
-   scrim, so the left-aligned text keeps AA contrast at every width (checked
-   over the glyphs on desktop, laptop, tablet and phone). Light mode drops it:
-   a dark city under dark text wouldn't read. Static, so it adds no scroll work. */
-.hero { position: relative; isolation: isolate; }
-.hero::before {
-  content: ""; position: absolute; top: 0; bottom: 0; left: 50%;
-  width: 100vw; transform: translateX(-50%); z-index: -1; pointer-events: none;
+/* A cyberpunk voxel skyline sits behind the whole page, in dark mode only. It's
+   fixed to the screen, so it holds still while every section scrolls or swaps
+   in over it. z-index: -1 keeps it under the content but over body's background,
+   which is painted on the canvas. 100lvh is the screen with the mobile toolbars
+   hidden, so no strip shows when they slide away. The SVG keeps its lit
+   district and moon to the right and carries a left scrim for the left-aligned
+   text. Light mode swaps in a daytime copy (pale sky, slate buildings), made by
+   relighting the night one, so dark text reads on it. A fixed layer adds no
+   scroll-time work. */
+body::before {
+  content: ""; position: fixed; top: 0; left: 0; z-index: -1;
+  width: 100%; height: 100lvh; pointer-events: none;
   background: url("public/voxel-city-bg.svg") center bottom / cover no-repeat;
 }
-:root[data-theme="light"] .hero::before { display: none; }
+:root[data-theme="light"] body::before { background-image: url("public/voxel-city-bg-light.svg"); }
 
 /* ---------- Buttons ----------
    The edge is the strip of the button left uncovered by its fill (::after). A
@@ -464,17 +465,7 @@ h1, h2, h3, .mono, .brand, .eyebrow, .stats strong, .nav nav a, .btn, .filters b
 /* An invisible section doesn't take clicks: one arriving on top of the
    section on screen, or one that has faded out. */
 @keyframes section-inert { from, to { pointer-events: none; } }
-
-/* Everywhere else (Firefox 158): content dissolves into the page colour at the
-   bottom edge as it scrolls up, still with no script. Sticky inside main, so it
-   comes to rest in its own space above the footer and never covers content. */
-@supports not (animation-timeline: view()) {
-  main::after {
-    content: ""; display: block; position: sticky; bottom: 0; height: 15vh;
-    background: linear-gradient(transparent, var(--bg));
-    pointer-events: none;
-  }
-}
+/* Everywhere else (Firefox 158) the sections scroll normally over the skyline. */
 
 /* ---------- Mobile ---------- */
 @media (max-width: 760px) {
