@@ -76,13 +76,14 @@
   --card: #ffffff;
   --border: #e1e4ef;
   --text: #171a26;
-  --muted: #5d647d;
-  --accent: #0b6680;
+  /* Dark enough to clear 4.5:1 where text crosses the city's buildings. */
+  --muted: #4a5066;
+  --accent: #095a72;
   --on-accent: #fff;
-  --accent-2: #096f5f;
-  --apps: #8d33db;
-  --automate: #1767d6;
-  --js: #b38b00;
+  --accent-2: #075f52;
+  --apps: #7a2bc0;
+  --automate: #1257bd;
+  --js: #735900;
   --shadow: 0 10px 30px rgb(20 20 60 / 0.08);
 }
 
@@ -152,9 +153,9 @@ section { padding: 72px 0 24px; }
 .stats strong { display: block; font-size: 2rem; font-weight: 700; }
 .stats span { color: var(--muted); font-size: 0.9rem; }
 
-/* A cyberpunk voxel skyline sits behind the whole page, in dark mode only. It's
-   fixed to the screen, so it holds still while every section scrolls or swaps
-   in over it. z-index: -1 keeps it under the content but over body's background,
+/* A cyberpunk voxel skyline sits behind the whole page. It's fixed to the
+   screen, so it holds still while every section scrolls or swaps in over it.
+   z-index: -1 keeps it under the content but over body's background,
    which is painted on the canvas. 100lvh is the screen with the mobile toolbars
    hidden, so no strip shows when they slide away. The SVG keeps its lit
    district and moon to the right and carries a left scrim for the left-aligned
@@ -220,13 +221,13 @@ body::before {
   background: var(--card); border: 1px solid var(--border);
   border-radius: 16px; padding: 1.5rem; box-shadow: var(--shadow);
 }
-/* A frosted card for running text (About, Experience), so the grey text stays
-   readable over the skyline: 85% card colour keeps it above 5:1 at its worst
-   spot in both themes, and the blur softens the city showing through. */
+/* A see-through card for running text (About, Experience), so the grey text
+   stays readable over the skyline: 85% card colour keeps it above 5:1 at its
+   worst spot in both themes. No backdrop blur: a section's scroll animation
+   would cut it off from the city behind, so it wouldn't show anyway. */
 .panel {
   background: color-mix(in srgb, var(--card) 85%, transparent); border: 1px solid var(--border);
   border-radius: 16px; padding: 1.5rem; box-shadow: var(--shadow);
-  backdrop-filter: blur(8px);
 }
 .card-icon {
   width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center;
