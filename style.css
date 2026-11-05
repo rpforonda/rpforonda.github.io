@@ -130,7 +130,18 @@ section { padding: 72px 0 24px; }
 .brand-mark { color: var(--accent); font-size: 1.3rem; }
 .nav nav { display: flex; gap: 1.5rem; }
 .nav nav a { color: var(--muted); font-weight: 500; }
-.nav nav a:hover { color: var(--text); text-decoration: none; }
+.nav nav a:hover { color: var(--accent); text-decoration: none; }
+/* Hovering a link rolls its letters up, one after another. Each letter's
+   text-shadow draws a copy one line below it, so the copy slides into place
+   as the letter leaves, and .roll hides whatever is outside its one line.
+   --i is the letter's position, set in nav.rs. */
+.roll { display: block; height: 1.6em; line-height: 1.6; overflow: hidden; white-space: pre; }
+.roll span {
+  display: inline-block; text-shadow: 0 1.6em currentColor;
+  transition: translate 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+  transition-delay: calc(var(--i) * 0.02s);
+}
+.nav nav a:hover .roll span { translate: 0 -1.6em; }
 .nav-actions { display: flex; gap: 0.5rem; }
 .icon-btn {
   background: var(--card); color: var(--text);

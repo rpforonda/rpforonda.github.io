@@ -31,8 +31,26 @@ pub fn Nav() -> impl IntoView {
                     .iter()
                     .map(|(href, label)| {
                         view! {
-                            <a href=*href on:click=move |_| set_menu_open.set(false)>
-                                {*label}
+                            // One span per letter for the hover roll in style.css. Screen
+                            // readers get the whole label instead of the letters.
+                            <a
+                                href=*href
+                                aria-label=*label
+                                on:click=move |_| set_menu_open.set(false)
+                            >
+                                <span class="roll" aria-hidden="true">
+                                    {label
+                                        .chars()
+                                        .enumerate()
+                                        .map(|(i, letter)| {
+                                            view! {
+                                                <span style=format!("--i:{i}")>
+                                                    {letter.to_string()}
+                                                </span>
+                                            }
+                                        })
+                                        .collect_view()}
+                                </span>
                             </a>
                         }
                     })
