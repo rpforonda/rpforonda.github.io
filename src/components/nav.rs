@@ -8,6 +8,19 @@ const LINKS: &[(&str, &str)] = &[
     ("#experience", "Experience"),
 ];
 
+/// One span per letter for the hover roll in style.css. Screen readers skip
+/// them, so the link holding them needs an aria-label with the whole text.
+fn roll(text: &str) -> impl IntoView {
+    let letters = text
+        .chars()
+        .enumerate()
+        .map(|(i, letter)| {
+            view! { <span style=format!("--i:{i}")>{letter.to_string()}</span> }
+        })
+        .collect_view();
+    view! { <span class="roll" aria-hidden="true">{letters}</span> }
+}
+
 #[component]
 pub fn Nav() -> impl IntoView {
     let (dark, set_dark) = signal(true);
@@ -22,17 +35,21 @@ pub fn Nav() -> impl IntoView {
 
     view! {
         <header class="nav">
-            <a class="brand" href="#top">
+            <a class="brand" href="#top" aria-label=NAME>
                 <span class="brand-mark">"⟡"</span>
-                {NAME}
+                {roll(NAME)}
             </a>
             <nav class:open=menu_open>
                 {LINKS
                     .iter()
                     .map(|(href, label)| {
                         view! {
-                            <a href=*href on:click=move |_| set_menu_open.set(false)>
-                                {*label}
+                            <a
+                                href=*href
+                                aria-label=*label
+                                on:click=move |_| set_menu_open.set(false)
+                            >
+                                {roll(label)}
                             </a>
                         }
                     })
